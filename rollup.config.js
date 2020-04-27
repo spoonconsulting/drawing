@@ -1,9 +1,12 @@
 import { terser } from 'rollup-plugin-terser'
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import coffeescript from 'rollup-plugin-coffee-script'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 
 const WATCH_ONLY = !process.env.ROLLUP_WATCH;
+const PORT = process.env.PORT || 10001;
 
 export default {
   input: 'src/drawing.coffee',
@@ -11,13 +14,13 @@ export default {
     {
       name: 'Drawing',
       file: 'dist/drawing.js',
-      format: 'iife',
+      format: 'umd',
       sourcemap: true
     },
     {
       name: 'Drawing',
       file: 'dist/drawing.min.js',
-      format: 'iife',
+      format: 'umd',
       sourcemap: true,
       plugins: [
         terser()
@@ -25,10 +28,13 @@ export default {
     }
   ],
   plugins: [
+    resolve(),
+    commonjs(),
     coffeescript(),
     (WATCH_ONLY ? null :
       serve({
-        contentBase: ['dist', 'static']
+        contentBase: ['dist', 'static'],
+        port: PORT
       })
     ),
     (WATCH_ONLY ? null :

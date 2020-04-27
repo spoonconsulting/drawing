@@ -1,6 +1,6 @@
+import { Referentiel } from "./referentiel.coffee"
 import { DrawingUtils } from "./drawing_utils.coffee"
 import { Geometry } from "./geometry.coffee"
-import { Referentiel } from "./referentiel.coffee"
 import { MoveListener, DownListener, UpListener } from "./drawing_listener.coffee"
 
 class DrawingDrag

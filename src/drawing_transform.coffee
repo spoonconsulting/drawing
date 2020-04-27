@@ -1,5 +1,5 @@
-import { DrawingUtils } from "./drawing_utils.coffee"
 import { Referentiel } from "./referentiel.coffee"
+import { DrawingUtils } from "./drawing_utils.coffee"
 import { DrawingDrag } from "./drawing_drag.coffee"
 import { DrawingHandle } from "./drawing_handle.coffee"
 import { Geometry } from "./geometry.coffee"
@@ -73,7 +73,7 @@ class DrawingTransform
             y: bbox.y - padding
             width: bbox.width + 2 * padding
             height: bbox.height + 2 * padding
-            style: "fill:white; opacity: 0.3;"
+            style: "fill:#CCCCCC; opacity: 0.3;"
           })
           DrawingUtils.apply_matrix(element, matrix)
           @svg.insertBefore(element, @element)

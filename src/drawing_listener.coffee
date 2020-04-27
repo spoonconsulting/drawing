@@ -13,9 +13,9 @@ class MoveListener
       if e.touches?
         for i in [0...e.touches.length]
           touch = e.touches[i]
-          @_touches.push([touch.offsetX, touch.offsetY])
+          @_touches.push([touch.pageX, touch.pageY])
       else
-        @_touches.push([e.offsetX, e.offsetY])
+        @_touches.push([e.pageX, e.pageY])
     @element.addEventListener 'touchmove', @_move
     @element.addEventListener 'mousemove', @_move
     @loop_callback = =>

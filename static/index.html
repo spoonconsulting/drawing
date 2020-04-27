@@ -5,6 +5,9 @@
     <script type="application/javascript">
       window.addEventListener('load', function(e) {
         let drawing = new Drawing.Drawing(document.querySelector('svg'), {});
+
+        drawing.setColor('#e83100');
+
         let toolItems = document.querySelectorAll('.svg-tools .item');
         let toolItemClickHandler = function(e) {
           let tool = e.currentTarget.dataset.tool;
@@ -29,6 +32,11 @@
     </script>
 
     <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
       .svg-container {
         display: inline-block;
         border: 1px solid #000;
@@ -70,25 +78,11 @@
 
       .svg-tools .color {
         padding: 0;
-        width: 16px;
-        height: 16px;
+        width: 20px;
+        height: 20px;
+        border: none;
+        border-radius: 4px;
         margin-right: 8px;
-      }
-      
-      .svg-tools .color[data-color=red] {
-        background: red;
-      }
-      
-      .svg-tools .color[data-color=blue] {
-        background: blue;
-      }
-      
-      .svg-tools .color[data-color=yellow] {
-        background: yellow;
-      }
-      
-      .svg-tools .color[data-color=green] {
-        background: green;
       }
     </style>
   </head>
@@ -105,10 +99,10 @@
       <li class="item" data-tool="rect">Rectangle</li>
       <li class="item" data-tool="note">Note</li>
       <li class="separator"></li>
-      <li class="item color" data-color="red"></li>
-      <li class="item color" data-color="blue"></li>
-      <li class="item color" data-color="yellow"></li>
-      <li class="item color" data-color="green"></li>
+      <li class="item color" style="background-color: #e83100;" data-color="#e83100"></li>
+      <li class="item color" style="background-color: #00bae8;" data-color="#00bae8"></li>
+      <li class="item color" style="background-color: #f0ec00;" data-color="#e8e500"></li>
+      <li class="item color" style="background-color: #00e862;" data-color="#00e862"></li>
       <li class="separator"></li>
       <li class="item" data-edit="true">Edit</li>
       <li class="item" data-delete="true">Delete</li>
