@@ -139,34 +139,34 @@ class DrawingTransform
             ]
           )
           group
-        move: (move)=>
+        move: (touch, listener)=>
           @position_handle.destroy()
           position = [
-            transform_handle_center[0] + move[0],
-            transform_handle_center[1] + move[1]
+            transform_handle_center[0] + touch[0],
+            transform_handle_center[1] + touch[1]
           ]
           angle = Geometry.angle(center, transform_handle_center, position)
           scale = 1 + (
             Geometry.distance(center, position)-transform_handle_center_distance
           ) / transform_handle_center_distance
-          transformation_matrix = Geometry.multiply_matrix(
-            [
-              [1, 0, center[0]],
-              [0, 1, center[1]],
-              [0, 0, 1]
-            ],
-            [
-              [scale, 0, 0],
-              [0, scale, 0],
-              [0, 0, 1]
-            ],
-            Geometry.rotation_matrix(angle)
-            [
-              [1, 0, -center[0]],
-              [0, 1, -center[1]],
-              [0, 0, 1]
-            ]
-          )
+          transformations = []
+          transformations.push [
+            [1, 0, center[0]],
+            [0, 1, center[1]],
+            [0, 0, 1]
+          ]
+          transformations.push [
+            [scale, 0, 0],
+            [0, scale, 0],
+            [0, 0, 1] 
+          ] unless listener.shift
+          transformations.push(Geometry.rotation_matrix(angle)) unless listener.alt
+          transformations.push [
+            [1, 0, -center[0]],
+            [0, 1, -center[1]],
+            [0, 0, 1]
+          ]
+          transformation_matrix = Geometry.multiply_matrix.apply(null, transformations)
           DrawingUtils.apply_matrix(
             @element,
             Geometry.multiply_matrix(transformation_matrix, matrix)

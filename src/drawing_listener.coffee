@@ -16,6 +16,8 @@ class MoveListener
           @_touches.push([touch.pageX, touch.pageY])
       else
         @_touches.push([e.pageX, e.pageY])
+      @alt = e.altKey
+      @shift = e.shiftKey
     @element.addEventListener 'touchmove', @_move
     @element.addEventListener 'mousemove', @_move
     @loop_callback = =>
@@ -27,7 +29,7 @@ class MoveListener
     if @_touches?
       for touch in @_touches
         touches.push(@_referentiel.global_to_local(touch))
-    @options.move(touches) if touches.length > 0
+    @options.move(touches, @) if touches.length > 0
     requestAnimationFrame @loop_callback
   destroy: ->
     return if @destroyed
