@@ -1,8 +1,8 @@
 {
-  "name": "drawing",
-  "version": "0.1.0",
+  "name": "@spoonconsulting/drawing",
+  "version": "0.1.1",
   "description": "Simple SVG drawing",
-  "main": "index.js",
+  "main": "dist/drawing.min.js",
   "scripts": {
     "build": "npx rollup -c",
     "start": "npx rollup -c -w"
