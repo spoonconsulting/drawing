@@ -1,4 +1,4 @@
-import { Referentiel } from "./referentiel.coffee"
+import { Referentiel } from "referentiel"
 import { Geometry } from "./geometry.coffee"
 
 DrawingUtils = {

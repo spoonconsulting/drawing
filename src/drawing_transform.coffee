@@ -1,4 +1,4 @@
-import { Referentiel } from "./referentiel.coffee"
+import { Referentiel, MatrixUtils } from "referentiel"
 import { DrawingUtils } from "./drawing_utils.coffee"
 import { DrawingDrag } from "./drawing_drag.coffee"
 import { DrawingHandle } from "./drawing_handle.coffee"
@@ -20,11 +20,13 @@ class DrawingTransform
     @position_handle.destroy() if @position_handle?
     bbox = @element.getBBox()
     @referentiel = new Referentiel(@element)
-    matrix = @referentiel.matrix_transformation()
-    center = @referentiel._multiply_point(matrix, [
+    matrix = @referentiel.matrixTransform()
+    center = MatrixUtils.multVector(matrix, [
       bbox.x + bbox.width / 2
-      bbox.y + bbox.height / 2
+      bbox.y + bbox.height / 2,
+      1
     ])
+    center = [center[0], center[1]]
 
     @drag.destroy() if @drag?
     @drag = new DrawingDrag(
@@ -60,7 +62,7 @@ class DrawingTransform
             [0, 1, position[1]],
             [0, 0, 1]
           ]
-          DrawingUtils.apply_matrix(@element, @referentiel._multiply(translation_matrix, matrix))
+          DrawingUtils.apply_matrix(@element, MatrixUtils.mult(translation_matrix, matrix))
         end: (position)=>
           @options.end()
           @init()
@@ -81,14 +83,15 @@ class DrawingTransform
       }
     )
     @transform_handle.destroy() if @transform_handle?
-    transform_handle_center = @referentiel._multiply_point(
+    transform_handle_center = MatrixUtils.multVector(
       matrix,
       [
-        bbox.x + bbox.width + padding
-        bbox.y + bbox.height + padding
+        bbox.x + bbox.width + padding,
+        bbox.y + bbox.height + padding,
+        1
       ]
     )
-    transform_handle_center_distance = Geometry.distance(center, transform_handle_center)
+    transform_handle_center_distance = Geometry.distance(center, [transform_handle_center[0],transform_handle_center[1]])
     @transform_handle = new DrawingHandle(
       @svg,
       transform_handle_center,

@@ -1,4 +1,5 @@
-import { Referentiel } from "./referentiel.coffee"
+import { Referentiel, MatrixUtils } from "referentiel"
+import { Geometry } from "./geometry.coffee"
 import { DownListener } from "./drawing_listener.coffee"
 import { DrawingPathTool } from "./drawing_path_tool.coffee"
 import { DrawingObjectTool } from "./drawing_object_tool.coffee"
@@ -149,6 +150,7 @@ class Drawing
     element.parentNode.removeChild(element)
     @selectLast()
   selectLast: ->
+    return if @selected
     @select(@svg.lastChild) if @svg.lastChild?
   rotation_matrix: ->
     referentiel = new Referentiel(@svg)
@@ -253,4 +255,4 @@ class Drawing
     @_transform.destroy() if @_transform
     @_down.destroy()
 
-export { Drawing }
+export { Referentiel, Drawing, MatrixUtils, Geometry }

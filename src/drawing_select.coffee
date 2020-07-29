@@ -1,4 +1,4 @@
-import { Referentiel } from "./referentiel.coffee"
+import { Referentiel } from "referentiel"
 import { Geometry } from "./geometry.coffee"
 import { DrawingUtils } from "./drawing_utils.coffee"
 
@@ -14,7 +14,7 @@ class DrawingSelect
     @position_handle.destroy() if @position_handle?
     bbox = @element.getBBox()
     @referentiel = new Referentiel(@element)
-    matrix = @referentiel.matrix_transformation()
+    matrix = @referentiel.matrixTransform()
     center = @referentiel._multiply_point(matrix, [
       bbox.x + bbox.width / 2
       bbox.y + bbox.height / 2
