@@ -1,6 +1,6 @@
 {
   "name": "@spoonconsulting/drawing",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Simple SVG drawing",
   "main": "dist/drawing.min.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "start": "npm run build && ./node_modules/.bin/nf start"
   },
   "author": {
-    "name": "Spoon Consulting Ltd",
+    "name": "Spoon Consulting",
     "url": "http://www.spoonconsulting.com"
   },
   "license": "MIT",
