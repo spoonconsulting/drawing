@@ -1,0 +1,47 @@
+.svg-container {
+  display: inline-block;
+  border: 1px solid #000;
+  transform: rotate(30deg);
+}
+
+.svg-tools {
+  display: flex;
+  align-items: center;
+  margin: 8px 0 0 ;
+  padding: 0;
+  list-style: none;
+}
+
+.svg-tools .item {
+  border: 1px solid #000;
+  padding: 4px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.svg-tools .item:hover {
+  opacity: 0.6;
+}
+
+.svg-tools .item:active {
+  background-color: #DDD;
+}
+
+.svg-tools .item.color:active {
+  opacity: 0.3;
+}
+
+.svg-tools .separator {
+  border-right: 2px solid #000;
+  height: 20px;
+  margin: 0 12px;
+}
+
+.svg-tools .color {
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 4px;
+  margin-right: 8px;
+}

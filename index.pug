@@ -1,0 +1,30 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    meta(name='description', content='')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    script(type='text/javascript', src='../dist/drawing.js')
+    script(type='text/javascript', src='demo.js')
+    link(rel="stylesheet" media="all" href="../node_modules/reset-css/reset.css")
+    link(rel="stylesheet" media="all" href="./demo.css")
+  body
+    .svg-container
+      svg(width="800" height="600" viewbox="0 0 800 600")
+    ul.svg-tools
+      li.item(data-tool="path") Path
+      li.item(data-tool="arrow") Arrow
+      li.item(data-tool="double-arrow") Double arrow
+      li.item(data-tool="line") Line
+      li.item(data-tool="circle") Circle
+      li.item(data-tool="rect") Rectangle
+      li.item(data-tool="Note") Note
+      li.separator
+      li.item.color(style="background-color: #e83100;" data-color="#e83100")
+      li.item.color(style="background-color: #00bae8;" data-color="#00bae8")
+      li.item.color(style="background-color: #f0ec00;" data-color="#f0ec00")
+      li.item.color(style="background-color: #00e862;" data-color="#00e862")
+      li.separator
+      li.item(data-edit="true") Edit
+      li.item(data-delete="true") Delete
