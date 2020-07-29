@@ -14,7 +14,7 @@ class DrawingDrag
     e.stopPropagation()
     @referentiel = new Referentiel(@element)
     @matrix = @referentiel.matrixTransform()
-    @_move = new MoveListener(@svg, move: (touches)=> @move(touches))
+    @_move = new MoveListener(@svg, move: (touches, listener)=> @move(touches, listener))
     @_up = new UpListener(@svg, up: (e)=> @up(e))
   up: (e)->
     e.preventDefault()
@@ -25,7 +25,7 @@ class DrawingDrag
       @options.end(@last_move)
     else
       @options.cancel()
-  move: (touches)->
+  move: (touches, listener)->
     @first_touch = touches[0] unless @first_touch
     touch = touches[0]
     @last_move = [
@@ -41,7 +41,7 @@ class DrawingDrag
       @element,
       MatrixUtils.mult(translation_matrix, @matrix)
     )
-    @options.move(@last_move) if @options.move?
+    @options.move(@last_move, listener) if @options.move?
   destroy: ->
     DrawingUtils.style(@element, 'cursor', 'auto')
     @_move.destroy() if @_move?

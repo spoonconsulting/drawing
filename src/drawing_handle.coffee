@@ -38,9 +38,9 @@ class DrawingHandle
     @drag = new DrawingDrag(
       @element,
       {
-        move: (move)=>
+        move: (touch, listener)=>
           DrawingUtils.style(@element, 'opacity', 0)
-          @move(move)
+          @move(touch, listener)
         end: =>
           @end()
         cancel: =>
@@ -53,8 +53,8 @@ class DrawingHandle
   cancel: ()->
     @drag.destroy()
     @options.cancel()
-  move: (move)->
-    @options.move(move) if @options.move?
+  move: (touch, listener)->
+    @options.move(touch, listener) if @options.move?
   destroy: ->
     return if @destroyed
     @destroyed = true
