@@ -8,7 +8,7 @@
     "start": "npm run build && ./node_modules/.bin/nf start"
   },
   "author": {
-    "name": "Spoon Consulting",
+    "name": "Spoon Consulting Ltd",
     "url": "http://www.spoonconsulting.com"
   },
   "license": "MIT",
