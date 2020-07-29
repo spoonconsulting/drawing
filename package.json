@@ -1,8 +1,8 @@
 {
   "name": "@spoonconsulting/drawing",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Simple SVG drawing",
-  "main": "dist/drawing.min.js",
+  "main": "dist/drawing.js",
   "module": "src/drawing.js",
   "scripts": {
     "build": "./node_modules/.bin/pug index.pug && ./node_modules/.bin/webpack-cli",
