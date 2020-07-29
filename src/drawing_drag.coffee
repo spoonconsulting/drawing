@@ -1,4 +1,4 @@
-import { Referentiel } from "./referentiel.coffee"
+import { Referentiel, MatrixUtils } from "referentiel"
 import { DrawingUtils } from "./drawing_utils.coffee"
 import { Geometry } from "./geometry.coffee"
 import { MoveListener, DownListener, UpListener } from "./drawing_listener.coffee"
@@ -13,7 +13,7 @@ class DrawingDrag
     e.preventDefault()
     e.stopPropagation()
     @referentiel = new Referentiel(@element)
-    @matrix = @referentiel.matrix_transformation()
+    @matrix = @referentiel.matrixTransform()
     @_move = new MoveListener(@svg, move: (touches, listener)=> @move(touches, listener))
     @_up = new UpListener(@svg, up: (e)=> @up(e))
   up: (e)->
@@ -39,7 +39,7 @@ class DrawingDrag
     ]
     DrawingUtils.apply_matrix(
       @element,
-      @referentiel._multiply(translation_matrix, @matrix)
+      MatrixUtils.mult(translation_matrix, @matrix)
     )
     @options.move(@last_move, listener) if @options.move?
   destroy: ->

@@ -1,4 +1,4 @@
-import { Referentiel } from "./referentiel.coffee"
+import { Referentiel } from "referentiel"
 import { DrawingUtils } from "./drawing_utils.coffee"
 import { DrawingDrag } from "./drawing_drag.coffee"
 
