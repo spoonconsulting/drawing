@@ -1,5 +1,4 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require('path')
 
 module.exports = {
   mode: 'production',
@@ -19,11 +18,11 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env', {targets: {ie: '10'}}]
+              ['@babel/preset-env', { targets: { ie: '10' } }]
             ]
           }
         }
       }
     ]
   }
-};
+}
