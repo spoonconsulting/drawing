@@ -1,7 +1,14 @@
 window.addEventListener('load', function(e) {
-  var drawing = new Drawing.Drawing(document.querySelector('svg'), {});
+  var drawing = new Drawing.Drawing(document.querySelector('svg'), {
+      prompt_text: function(placeholder, callback){
+        callback(prompt('Enter some text:',placeholder));
+      }
+  });
 
   drawing.setColor('#e83100');
+  drawing.addText('Super !');
+  // drawing.addText('Super !');
+  // drawing.addTextWithBackground('Plop !')
 
   var toolItems = document.querySelectorAll('.svg-tools .item');
   var toolItemClickHandler = function(e) {

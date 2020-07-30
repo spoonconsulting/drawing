@@ -273,7 +273,7 @@ class Drawing {
       'font-family': 'sans-serif'
     });
     DrawingUtils.edit_text(text, input);
-    DrawingUtils.apply_matrix(group, referentiel._multiply([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotation_matrix()));
+    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotation_matrix()));
     this._new_callback(group);
     return this.select(text);
   }
@@ -323,7 +323,7 @@ class Drawing {
     referentiel = new Referentiel(this.svg);
     center = referentiel.global_to_local([window.innerWidth / 2, window.innerHeight / 2]);
     scale = (DrawingUtils.size(this.svg) / 8) / width;
-    DrawingUtils.apply_matrix(group, referentiel._multiply([[scale, 0, center[0]], [0, scale, center[1]], [0, 0, 1]], this.rotation_matrix(), [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]));
+    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[scale, 0, center[0]], [0, scale, center[1]], [0, 0, 1]], this.rotation_matrix(), [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]));
     this._new_callback(group);
     return this.select(group);
   }

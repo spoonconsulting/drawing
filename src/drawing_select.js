@@ -1,17 +1,8 @@
-
 var DrawingSelect;
 
-import {
-  Referentiel
-} from "referentiel";
-
-import {
-  Geometry
-} from "./geometry.js";
-
-import {
-  DrawingUtils
-} from "./drawing_utils.js";
+import { Referentiel, MatrixUtils } from "referentiel";
+import { Geometry } from "./geometry.js";
+import { DrawingUtils } from "./drawing_utils.js";
 
 DrawingSelect = class DrawingSelect {
   constructor(element, options) {
@@ -34,7 +25,8 @@ DrawingSelect = class DrawingSelect {
     bbox = this.element.getBBox();
     this.referentiel = new Referentiel(this.element);
     matrix = this.referentiel.matrixTransform();
-    center = this.referentiel._multiply_point(matrix, [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2]);
+    center = MatrixUtils.multVector(matrix, [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2, 1]);
+    center = [center[0], center[1]];
     referentiel = new Referentiel(this.svg);
     padding = Geometry.distance(referentiel.global_to_local([window.innerWidth / 2, window.innerHeight / 2]), referentiel.global_to_local([0, 0])) * 0.01;
     this.background = DrawingUtils.create_element(this.svg, 'rect', {
