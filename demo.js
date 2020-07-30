@@ -6,7 +6,7 @@ window.addEventListener('load', function (e) {
   })
 
   drawing.setColor('#e83100')
-  drawing.addText('Super !')
+  // drawing.addText('Super !')
   // drawing.addText('Super !');
   // drawing.addTextWithBackground('Plop !')
 

@@ -2,9 +2,7 @@ import { Referentiel } from 'referentiel'
 import { Geometry } from './geometry.js'
 import { DrawingUtils } from './drawing_utils.js'
 
-var DrawingSelect
-
-DrawingSelect = class DrawingSelect {
+class DrawingSelect {
   constructor (element, options) {
     this.element = element
     this.options = options
@@ -46,6 +44,4 @@ DrawingSelect = class DrawingSelect {
   }
 }
 
-export {
-  DrawingSelect
-}
+export { DrawingSelect }

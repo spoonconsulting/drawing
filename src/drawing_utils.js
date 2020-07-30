@@ -1,15 +1,7 @@
+import { Referentiel } from 'referentiel'
+import { Geometry } from './geometry.js'
 
-import {
-  Referentiel
-} from 'referentiel'
-
-import {
-  Geometry
-} from './geometry.js'
-
-var DrawingUtils
-
-DrawingUtils = {
+var DrawingUtils = {
   apply_matrix: function (element, m) {
     return DrawingUtils.style(element, 'transform', `matrix(${[m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]].join(', ')})`)
   },
@@ -42,6 +34,7 @@ DrawingUtils = {
     return element
   },
   edit_text: function (element, input) {
+    if (input === null || input === '') { return }
     var bbox, child, i, j, len, len1, line, ref, ref1, results
     element.innerHTML = ''
     ref = input.split('\n')
@@ -64,9 +57,45 @@ DrawingUtils = {
       results.push(child.setAttribute('x', -bbox.width / 2))
     }
     return results
+  },
+  addEventListener: function(element, events, func, useCapture){
+    var destroyed = false
+    events.split(' ').map(function(ev) {
+      element.addEventListener(ev, func, useCapture);
+    });
+    return function() {
+      if(destroyed) { return }
+      destroyed = true
+      events.split(' ').map(function(ev) {
+        element.removeEventListener(ev, func, useCapture);
+      });
+    }
+  },
+  eventInScope (event, element) {
+    var e = event.relatedTarget
+    if (event.relatedTarget === null) {
+      return false
+    }
+    while (e) {
+      if (e === element) {
+        return true
+      }
+      e = e.parentNode
+    }
+    return false
+  },
+  extractTouches(e) {
+    if (e.touches != null) {
+      var touches = []
+      var i, j, ref
+      for (i = j = 0, ref = e.touches.length; (ref >= 0 ? j < ref : j > ref); i = ref >= 0 ? ++j : --j) {
+        var touch = e.touches[i]
+        touches.push([touch.pageX, touch.pageY])
+      }
+      return touches;
+    }
+    return [[e.pageX, e.pageY]]
   }
 }
 
-export {
-  DrawingUtils
-}
+export { DrawingUtils }

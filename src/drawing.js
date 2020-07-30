@@ -188,9 +188,7 @@ class Drawing {
                 text = textElement.innerText || textElement.textContent
               }
               return this.options.prompt_text(text, (input) => {
-                if (input !== '') {
-                  DrawingUtils.edit_text(element.children[0], input)
-                }
+                DrawingUtils.edit_text(element.children[0], input)
                 this.select(null)
                 return this.select(element)
               })

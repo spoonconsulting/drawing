@@ -1,15 +1,7 @@
+import { DrawingUtils } from './drawing_utils.js'
+import { Geometry } from './geometry.js'
 
-import {
-  DrawingUtils
-} from './drawing_utils.js'
-
-import {
-  Geometry
-} from './geometry.js'
-
-var DrawingRect
-
-DrawingRect = class DrawingRect {
+class DrawingRect {
   constructor (options) {
     this.options = options
     this.rect = DrawingUtils.create_element(this.options.parent, 'rect')
@@ -55,6 +47,4 @@ DrawingRect = class DrawingRect {
 
 DrawingRect.type = 'rect'
 
-export {
-  DrawingRect
-}
+export { DrawingRect }

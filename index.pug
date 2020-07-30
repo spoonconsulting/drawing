@@ -11,7 +11,22 @@ html(lang='en')
     link(rel="stylesheet" media="all" href="./demo.css")
   body
     .svg-container
-      svg(viewbox="0 0 800 600")
+      svg
+        defs
+          filter(id="drawingSelected")
+            feColorMatrix(in="SourceGraphic" type="matrix" values="500 500 500 0 0 500 500 500 0 0 500 500 500 0 0 500 500 500 500 0" result="saturated")
+            feMorphology(operator="dilate" radius="4" in="saturated" result="dilated")
+            feComposite(operator="out" in="dilated" in2="saturated" result="outline")
+            feColorMatrix(in="outline" type="matrix" values="0 0 0 0 0 0 0.72 0 0 0 0 0 0.909 0 0 0 0 0 0.8 0" result="outlineColored")
+            feGaussianBlur(in="outlineColored" stdDeviation=2 result="outlineBlured")
+            feMerge
+              feMergeNode(in="outlineBlured")
+              feMergeNode(in="SourceGraphic")
+        g(data-sharinpix-type="text" style="fill: rgb(0, 186, 232); stroke: rgb(0, 186, 232); cursor: auto;" transform="matrix(1, 0, 0, 1, 1278, 502.5)")
+          text(stroke-width="0" font-size="69" font-family="sans-serif")
+            tspan(dy="1.2em" x="-125.875" y="-41") Super !
+        path(filter="url(#selected)" style="stroke-width: 13px;stroke-linecap: round;stroke: black; fill: none;" d="M665,331L665,331L665,331L651,330L607,330L597,331L562,340L538,350L520,366L507,380L499,390L484,423L484,427L482,453L487,477L491,489L512,517L523,528L529,533L558,553L588,565L632,579L668,584L752,584L796,576L858,560L888,550L954,516L978,498L1016,452L1026,428L1028,401L1027,391L1016,367L1009,360L974,333L945,315L905,294L876,281L827,266L805,263L794,261L761,259L745,259L719,268L706,276L691,290L686,295L674,304L669,308L665,310L659,314")
+
     ul.svg-tools
       li.item(data-tool="path") Path
       li.item(data-tool="arrow") Arrow

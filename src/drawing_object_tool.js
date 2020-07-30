@@ -28,10 +28,10 @@ DrawingObjectTool = class DrawingObjectTool {
       }
     })
     this.group = DrawingUtils.create_element(this.element, 'g', {
-      'data-sharinpix-type': this.options.object_class.type
+      'data-sharinpix-type': this.options.objectClass.type
     })
     this.size = DrawingUtils.size(this.element) * 0.01
-    ObjectClass = this.options.object_class
+    ObjectClass = this.options.objectClass
     this.object = new ObjectClass({
       parent: this.group,
       color: this.options.color,
@@ -46,7 +46,7 @@ DrawingObjectTool = class DrawingObjectTool {
     }
     e.preventDefault()
     e.stopPropagation()
-    if (this.object.big_enough()) {
+    if (this.object.bigEnough()) {
       this.object.end(() => {
         return this.options.end(this.group)
       })

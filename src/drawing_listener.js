@@ -1,8 +1,6 @@
 import { Referentiel } from 'referentiel'
 
-var DownListener, MoveListener, UpListener
-
-MoveListener = class MoveListener {
+class MoveListener {
   constructor (element, options) {
     this.element = element
     this.options = options
@@ -67,7 +65,7 @@ MoveListener = class MoveListener {
   }
 }
 
-DownListener = class DownListener {
+class DownListener {
   constructor (element, options) {
     this.element = element
     this.options = options
@@ -99,7 +97,7 @@ DownListener = class DownListener {
   }
 }
 
-UpListener = class UpListener {
+class UpListener {
   constructor (element, options) {
     this.element = element
     this.options = options
@@ -152,8 +150,4 @@ UpListener = class UpListener {
   }
 }
 
-export {
-  MoveListener,
-  DownListener,
-  UpListener
-}
+export { MoveListener, DownListener, UpListener }
