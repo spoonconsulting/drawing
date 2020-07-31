@@ -1,37 +1,17 @@
+import { DrawingUtils as Utils } from './drawing_utils.js'
+import { Geometry } from './geometry.js'
 
-import {
-  MoveListener,
-  UpListener
-} from './drawing_listener.js'
-
-import {
-  DrawingUtils
-} from './drawing_utils.js'
-
-import {
-  Geometry
-} from './geometry.js'
-
-var DrawingPathTool
-
-DrawingPathTool = class DrawingPathTool {
+class DrawingPathTool {
   constructor (element, options) {
     this.element = element
     this.options = options
     this.destroyed = false
     this._points = []
-    this._up_listener = new UpListener(this.element, {
-      up: (e) => {
-        return this.up(e)
-      }
-    })
-    this._move_listener = new MoveListener(this.element, {
-      move: (touches) => {
-        return this.move(touches)
-      }
-    })
+    this._moveListener = Utils.addEventListener(this.element, 'touchmove mousemove', (e) => { this.move(e) })
+    this._upListener = Utils.addEventListener(this.element, 'touchend touchcancel mouseout mouseup', (e) => { this.up(e) })
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    this.size = DrawingUtils.size(this.element) * 0.01
+    this.size = Utils.size(this.element) * 0.01
+    this.lastEvent = null
     switch (this.options.size) {
       case 'small':
         this.size /= 2
@@ -40,19 +20,20 @@ DrawingPathTool = class DrawingPathTool {
         this.size *= 2
     }
     this.group = document.createElementNS('http://www.w3.org/2000/svg', 'g')
-    DrawingUtils.style(this.group, 'stroke', this.options.color || '#ff0000')
-    DrawingUtils.style(this.group, 'strokeWidth', this.size + 'px')
-    DrawingUtils.style(this.path, 'strokeLinecap', 'round')
-    DrawingUtils.style(this.path, 'fill', 'none')
+    Utils.style(this.group, 'stroke', this.options.color || '#ff0000')
+    Utils.style(this.group, 'strokeWidth', this.size + 'px')
+    Utils.style(this.path, 'strokeLinecap', 'round')
+    Utils.style(this.path, 'fill', 'none')
     this.group.setAttribute('data-sharinpix-type', 'path')
     this.group.appendChild(this.path)
     this.element.appendChild(this.group)
+    window.requestAnimationFrame(() => { this.tick() })
   }
 
   up (e) {
-    if (this.destroyed) {
-      return
-    }
+    if (Utils.eventInScope(e, this.element)) { return }
+    if (this.destroyed) { return }
+    console.log('UP !!')
     e.preventDefault()
     e.stopPropagation()
     if (this._points.length > 3) {
@@ -87,35 +68,46 @@ DrawingPathTool = class DrawingPathTool {
     return [this.round(point[0]), this.round(point[1])]
   }
 
-  move (touches) {
-    var lastPoint, newPoint
-    if (this.destroyed) {
+  move (e) {
+    if (e.touches != null && e.touches.length > 1) {
+      this.destroy()
       return
     }
-    if (touches.length > 1) {
-      return this.destroy()
-    }
-    newPoint = this.roundPoint(touches[0])
-    if (this._points.length > 0) {
-      lastPoint = this._points[this._points.length - 1]
-      if (Geometry.distance(newPoint, lastPoint) < 3) {
-        return
+    e.preventDefault()
+    e.stopPropagation()
+    this.lastEvent = e
+  }
+
+  tick () {
+    if (this.destroyed) { return }
+    console.log('TICK !')
+    if (this.lastEvent !== null) {
+      var touches = Utils.extractTouches(this.lastEvent)
+      if (touches.length > 1) {
+        return this.destroy()
+      }
+      var newPoint = this.roundPoint(touches[0])
+      if (this._points.length > 0) {
+        var lastPoint = this._points[this._points.length - 1]
+        if (Geometry.distance(newPoint, lastPoint) <= 3) {
+          newPoint = null
+        }
+      }
+      if (newPoint != null) {
+        this._points.push(newPoint)
+        this.path.setAttribute('d', this.d())
       }
     }
-    this._points.push(newPoint)
-    return this.path.setAttribute('d', this.d())
+    window.requestAnimationFrame(() => { this.tick() })
   }
 
   destroy () {
-    if (this.destroyed) {
-      return
-    }
+    console.log('DESTROY!')
+    if (this.destroyed) { return }
+    this._upListener()
+    this._moveListener()
     this.destroyed = true
-    this._up_listener.destroy()
-    return this._move_listener.destroy()
   }
 }
 
-export {
-  DrawingPathTool
-}
+export { DrawingPathTool }

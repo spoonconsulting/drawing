@@ -1,8 +1,6 @@
-import { Referentiel, MatrixUtils } from 'referentiel'
-// import { DrawingUtils } from './drawing_utils.js'
+import { Referentiel } from 'referentiel'
 import { DrawingDrag } from './drawing_drag.js'
-// import { DrawingHandle } from './drawing_handle.js'
-import { Geometry } from './geometry.js'
+import defs from './defs.html'
 
 class DrawingTransform {
   constructor (element1, options) {
@@ -13,12 +11,14 @@ class DrawingTransform {
     while (this.svg.localName !== 'svg') {
       this.svg = this.svg.parentNode
     }
+    this.defs = (new window.DOMParser()).parseFromString(defs, 'image/svg+xml').documentElement.children[0]
+    this.svg.prepend(this.defs)
     this.svg.appendChild(this.element)
     this.init()
   }
 
   init () {
-    var bbox, center, matrix, padding, referentiel, time, transformHandleCenter, transformHandleCenterDistance
+    var time
     if (this.last_init) {
       time = Date.now() - this.last_init
       if (time < 500 && this.options.click) {
@@ -31,15 +31,18 @@ class DrawingTransform {
     }
     this.element.setAttribute('filter', 'url(#drawingSelected)')
     this.element.style.pointerEvents = 'all'
-    bbox = this.element.getBBox()
+    // bbox = this.element.getBBox()
     this.referentiel = new Referentiel(this.element)
-    matrix = this.referentiel.matrixTransform()
-    center = MatrixUtils.multVector(matrix, [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2, 1])
-    center = [center[0], center[1]]
+    // matrix = this.referentiel.matrixTransform()
+    // center = MatrixUtils.multVector(matrix, [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2, 1])
+    // center = [center[0], center[1]]
     if (this.drag != null) {
       this.drag.destroy()
     }
     this.drag = new DrawingDrag(this.element, {
+      start: () => {
+        this.element.setAttribute('filter', '')
+      },
       move: () => {
         // this.transformHandle.destroy()
         // this.positionHandle.destroy()
@@ -49,13 +52,15 @@ class DrawingTransform {
         return this.options.cancel()
       },
       end: () => {
+        this.element.setAttribute('filter', 'url(#drawingSelected)')
         this.options.end()
         return this.init()
-      }
+      },
+      container: this.svg
     })
 
-    referentiel = new Referentiel(this.svg)
-    padding = Geometry.distance(referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2]), referentiel.globalToLocal([0, 0])) * 0.01
+    // referentiel = new Referentiel(this.svg)
+    // padding = Geometry.distance(referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2]), referentiel.globalToLocal([0, 0])) * 0.01
     // this.positionHandle = new DrawingHandle(this.svg, center, {
     //   color: '#04844b',
     //   move: (position) => {

@@ -1,0 +1,14 @@
+svg(xmlns="http://www.w3.org/2000/svg")
+  filter(id="drawingSelected" filterUnits="userSpaceOnUse")
+    feFlood(flood-color="#3498db" result="color")
+    feMorphology(operator="dilate" radius="2" in="SourceAlpha" result="bigger")
+    feComposite(operator="arithmetic" in="color" in2="bigger" k1=500 k2=0 k3=0 result="biggershape")
+
+    feMorphology(operator="erode" radius="2" in="SourceAlpha" result="smaller")
+    feComposite(operator="arithmetic" in="color" in2="smaller" k1=500 k2=0 k3=0 result="smallershape")
+
+    feComposite(operator="out" in="biggershape" in2="smallershape" result="outline")
+    feComposite(operator="in" in="color" in2="outline" result="outlineColored")
+    feMerge
+      feMergeNode(in="outlineColored")
+      feMergeNode(in="SourceGraphic")

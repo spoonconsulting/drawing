@@ -5,7 +5,7 @@
   "main": "dist/drawing.js",
   "module": "src/drawing.js",
   "scripts": {
-    "build": "./node_modules/.bin/standard && ./node_modules/.bin/pug index.pug && ./node_modules/.bin/webpack-cli",
+    "build": "./node_modules/.bin/standard && ./node_modules/.bin/pug index.pug src && ./node_modules/.bin/webpack-cli",
     "start": "npm run build && ./node_modules/.bin/nf start"
   },
   "author": {
@@ -14,6 +14,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "nudged": "^1.4.0",
     "referentiel": "1.0.0"
   },
   "devDependencies": {
@@ -22,6 +23,7 @@
     "babel-loader": "^8.1.0",
     "coffeescript": "^2.5.1",
     "foreman": "^3.0.1",
+    "raw-loader": "^4.0.1",
     "http-server": "^0.12.3",
     "pug-cli": "^1.0.0-alpha6",
     "reset-css": "^5.0.1",

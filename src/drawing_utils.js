@@ -58,17 +58,17 @@ var DrawingUtils = {
     }
     return results
   },
-  addEventListener: function(element, events, func, useCapture){
+  addEventListener: function (element, events, func, useCapture) {
     var destroyed = false
-    events.split(' ').map(function(ev) {
-      element.addEventListener(ev, func, useCapture);
-    });
-    return function() {
-      if(destroyed) { return }
+    events.split(' ').map(function (ev) {
+      element.addEventListener(ev, func, useCapture)
+    })
+    return function () {
+      if (destroyed) { return }
       destroyed = true
-      events.split(' ').map(function(ev) {
-        element.removeEventListener(ev, func, useCapture);
-      });
+      events.split(' ').map(function (ev) {
+        element.removeEventListener(ev, func, useCapture)
+      })
     }
   },
   eventInScope (event, element) {
@@ -84,7 +84,7 @@ var DrawingUtils = {
     }
     return false
   },
-  extractTouches(e) {
+  extractTouches (e) {
     if (e.touches != null) {
       var touches = []
       var i, j, ref
@@ -92,7 +92,7 @@ var DrawingUtils = {
         var touch = e.touches[i]
         touches.push([touch.pageX, touch.pageY])
       }
-      return touches;
+      return touches
     }
     return [[e.pageX, e.pageY]]
   }
