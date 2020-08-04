@@ -80,7 +80,7 @@ class Drawing {
     this._tool = new DrawingObjectTool(this.svg, {
       color: this.options.color,
       size: this.options.size,
-      prompt_text: this.options.prompt_text,
+      promptText: this.options.promptText,
       objectClass: objectClass,
       end: (element) => {
         this._tool = null
@@ -118,6 +118,9 @@ class Drawing {
       type = element.getAttribute('data-sharinpix-type')
       switch (type) {
         case 'text':
+          this._transform = this.transform(this.selected)
+          break
+        case 'text-with-background':
           this._transform = this.transform(this.selected)
           break
         case 'sticker':
@@ -168,35 +171,40 @@ class Drawing {
   transform (element) {
     return new DrawingTransform(element, {
       click: () => {
-        var child, i, len, parts, ref, text, textElement
         if (element.attributes['data-sharinpix-type'] == null) {
           return
         }
-        switch (element.attributes['data-sharinpix-type'].value) {
+        var type = element.attributes['data-sharinpix-type'].value
+        switch (type) {
+          case 'text-with-background':
           case 'text':
-            if (this.options.prompt_text) {
-              textElement = element.children[0]
+            if (this.options.promptText) {
+              var textElement = element.querySelector('text')
+              var text
               if (textElement.children.length > 0) {
-                parts = []
-                ref = textElement.children
-                for (i = 0, len = ref.length; i < len; i++) {
-                  child = ref[i]
+                var parts = []
+                var ref = textElement.children
+                var len = ref.length
+                for (var i = 0; i < len; i++) {
+                  var child = ref[i]
                   parts.push(child.innerText || child.textContent)
                 }
                 text = parts.join('\n')
               } else {
                 text = textElement.innerText || textElement.textContent
               }
-              return this.options.prompt_text(text, (input) => {
-                DrawingUtils.edit_text(element.children[0], input)
-                this.select(null)
-                return this.select(element)
+              this.options.promptText(text, (input) => {
+                DrawingUtils.edit_text(textElement, input)
+                this.select(element)
               })
+            }
+            if (type === 'text-with-background') {
+              this.setTextBackgroundSize(element)
             }
             break
           case 'note':
-            if (this.options.prompt_text) {
-              return this.options.prompt_text(element.getAttribute('data-sharinpix-note-text'), function (input) {
+            if (this.options.promptText) {
+              this.options.promptText(element.getAttribute('data-sharinpix-note-text'), function (input) {
                 if (input !== '') {
                   return element.setAttribute('data-sharinpix-note-text', input)
                 }
@@ -262,24 +270,47 @@ class Drawing {
     return [[Math.cos(angle), -Math.sin(angle), 0], [Math.sin(angle), Math.cos(angle), 0], [0, 0, 1]]
   }
 
-  addText (input) {
-    var center, group, referentiel, size, text
-    size = Math.round(DrawingUtils.size(this.svg) * 0.05)
-    referentiel = new Referentiel(this.svg)
-    center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
-    group = DrawingUtils.create_element(this.svg, 'g')
-    group.setAttribute('data-sharinpix-type', 'text')
-    DrawingUtils.style(group, 'fill', this.options.color)
-    DrawingUtils.style(group, 'stroke', this.options.color)
-    text = DrawingUtils.create_element(group, 'text', {
+  addText (input, options = {}) {
+    var size = Math.round(DrawingUtils.size(this.svg) * 0.05)
+    var referentiel = new Referentiel(this.svg)
+    var center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
+    var group = DrawingUtils.create_element(this.svg, 'g')
+    var text = DrawingUtils.create_element(group, 'text', {
       'stroke-width': 0,
       'font-size': size,
       'font-family': 'sans-serif'
     })
     DrawingUtils.edit_text(text, input)
     DrawingUtils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotationMatrix()))
-    this._newCallback(group)
+
+    if (options.withBackground === true) {
+      group.setAttribute('data-sharinpix-type', 'text-with-background')
+      var rect = DrawingUtils.create_element(group, 'rect', {
+        'stroke-width': 0,
+        fill: this.options.color
+      })
+      group.insertBefore(rect, text)
+      DrawingUtils.style(group, 'fill', DrawingUtils.contrastColor(this.options.color))
+      DrawingUtils.style(group, 'stroke', DrawingUtils.contrastColor(this.options.color))
+      this.setTextBackgroundSize(group)
+    } else {
+      group.setAttribute('data-sharinpix-type', 'text')
+      DrawingUtils.style(group, 'fill', this.options.color)
+      DrawingUtils.style(group, 'stroke', this.options.color)
+    }
+    // this._newCallback(group)
     return this.select(text)
+  }
+
+  setTextBackgroundSize (element) {
+    console.log('Set Background !!!Background', element)
+    var rectElement = element.querySelector('rect')
+    var textElement = element.querySelector('text')
+    var bbox = textElement.getBBox()
+    DrawingUtils.style(rectElement, 'x', bbox.x)
+    DrawingUtils.style(rectElement, 'y', bbox.y)
+    DrawingUtils.style(rectElement, 'width', bbox.width)
+    return DrawingUtils.style(rectElement, 'height', bbox.height)
   }
 
   export (options, callback) {

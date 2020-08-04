@@ -36,7 +36,7 @@ DrawingObjectTool = class DrawingObjectTool {
       parent: this.group,
       color: this.options.color,
       size: this.size,
-      prompt_text: this.options.prompt_text
+      promptText: this.options.promptText
     })
   }
 

@@ -1,33 +1,31 @@
 import { DrawingUtils as Utils } from './drawing_utils.js'
 import { Geometry } from './geometry.js'
+import { Referentiel } from 'referentiel'
 
 class DrawingPathTool {
   constructor (element, options) {
+    console.log('Drawing Path Tool !')
     this.element = element
     this.options = options
     this.destroyed = false
-    this._points = []
     this._moveListener = Utils.addEventListener(this.element, 'touchmove mousemove', (e) => { this.move(e) })
     this._upListener = Utils.addEventListener(this.element, 'touchend touchcancel mouseout mouseup', (e) => { this.up(e) })
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    this.size = Utils.size(this.element) * 0.01
-    this.lastEvent = null
-    switch (this.options.size) {
-      case 'small':
-        this.size /= 2
-        break
-      case 'large':
-        this.size *= 2
-    }
     this.group = document.createElementNS('http://www.w3.org/2000/svg', 'g')
-    Utils.style(this.group, 'stroke', this.options.color || '#ff0000')
-    Utils.style(this.group, 'strokeWidth', this.size + 'px')
-    Utils.style(this.path, 'strokeLinecap', 'round')
-    Utils.style(this.path, 'fill', 'none')
     this.group.setAttribute('data-sharinpix-type', 'path')
     this.group.appendChild(this.path)
+    Utils.style(this.group, 'stroke', this.options.color || '#ff0000')
+    Utils.style(this.path, 'strokeLinecap', 'round')
+    Utils.style(this.path, 'fill', 'none')
     this.element.appendChild(this.group)
+    this.reset()
     window.requestAnimationFrame(() => { this.tick() })
+  }
+
+  reset () {
+    this.path.setAttribute('d', '')
+    this._points = []
+    this.lastEvent = null
   }
 
   up (e) {
@@ -61,7 +59,7 @@ class DrawingPathTool {
   }
 
   round (value) {
-    return Math.round(value + this.size / 2)
+    return Math.round((value) * 1000) / 1000.0
   }
 
   roundPoint (point) {
@@ -69,9 +67,8 @@ class DrawingPathTool {
   }
 
   move (e) {
-    if (e.touches != null && e.touches.length > 1) {
-      this.destroy()
-      return
+    if (e.ctrlKey || e.shiftKey || (e.touches != null && e.touches.length > 1)) {
+      return this.reset()
     }
     e.preventDefault()
     e.stopPropagation()
@@ -80,13 +77,23 @@ class DrawingPathTool {
 
   tick () {
     if (this.destroyed) { return }
-    console.log('TICK !')
     if (this.lastEvent !== null) {
-      var touches = Utils.extractTouches(this.lastEvent)
-      if (touches.length > 1) {
-        return this.destroy()
+      if (this._points.length === 0) {
+        this.referentiel = new Referentiel(this.element)
+        this.size = Utils.size(this.element) * 0.01
+        switch (this.options.size) {
+          case 'small':
+            this.size /= 2
+            break
+          case 'large':
+            this.size *= 2
+        }
+        Utils.style(this.group, 'strokeWidth', this.size + 'px')
       }
-      var newPoint = this.roundPoint(touches[0])
+      var touches = Utils.extractTouches(this.lastEvent)
+
+      var newPoint = this.roundPoint(this.referentiel.globalToLocal(touches[0]))
+      console.log('New Point !', newPoint)
       if (this._points.length > 0) {
         var lastPoint = this._points[this._points.length - 1]
         if (Geometry.distance(newPoint, lastPoint) <= 3) {

@@ -5,9 +5,17 @@ var DrawingUtils = {
   apply_matrix: function (element, m) {
     return DrawingUtils.style(element, 'transform', `matrix(${[m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]].join(', ')})`)
   },
+  nudgedMatrix: function (m) {
+    return [
+      [m.a, m.c, m.e],
+      [m.b, m.d, m.f],
+      [0, 0, 1]
+    ]
+  },
   style: function (element, key, value) {
-    if (key === 'transform') {
-      element.setAttribute('transform', value)
+    if (['height', 'width', 'x', 'y', 'transform'].indexOf(key) > -1) {
+      element.setAttribute(key, value)
+      // element.style[key] = value
     } else {
       element.style[key] = value
     }
@@ -95,6 +103,21 @@ var DrawingUtils = {
       return touches
     }
     return [[e.pageX, e.pageY]]
+  },
+  contrastColor (hexcolor) {
+    var b, g, r, yiq
+    if (hexcolor.slice(0, 1) === '#') {
+      hexcolor = hexcolor.slice(1)
+    }
+    r = parseInt(hexcolor.substr(0, 2), 16)
+    g = parseInt(hexcolor.substr(2, 2), 16)
+    b = parseInt(hexcolor.substr(4, 2), 16)
+    yiq = (r * 299 + g * 587 + b * 114) / 1000
+    if (yiq >= 128) {
+      return '#34495e'
+    } else {
+      return '#ecf0f1'
+    }
   }
 }
 

@@ -54,8 +54,8 @@ DrawingNote = class DrawingNote {
   }
 
   end (callback) {
-    if (this.options.prompt_text != null) {
-      this.options.prompt_text('', (input) => {
+    if (this.options.promptText != null) {
+      this.options.promptText('', (input) => {
         if (input !== '') {
           return this.options.parent.setAttribute('data-sharinpix-note-text', input)
         }

@@ -47,8 +47,8 @@ class DrawingArrow {
   }
 
   end (callback) {
-    if (this.options.prompt_text != null) {
-      this.options.prompt_text('', (input) => {
+    if (this.options.promptText != null) {
+      this.options.promptText('', (input) => {
         var bbox, center, hyp, offsetX, offsetY, offsetAngle, padding
         if (input !== '') {
           this.text_group = DrawingUtils.create_element(this.options.parent, 'g')

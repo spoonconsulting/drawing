@@ -62,8 +62,8 @@ DrawingDoubleArrow = class DrawingDoubleArrow {
   }
 
   end (callback) {
-    if (this.options.prompt_text != null) {
-      this.options.prompt_text('', (input) => {
+    if (this.options.promptText != null) {
+      this.options.promptText('', (input) => {
         var angle, center, text, textGroup
         if (input !== '') {
           center = Geometry.barycentre([this.from, this.to])

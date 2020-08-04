@@ -1,16 +1,26 @@
 .svg-container {
   display: inline-block;
   border: 1px solid #000;
-  //transform: rotate(30deg);
-  width: 80%;
+  // transform: rotate(30deg);
+  // width: 80%;
+  width: 100vw;
+  height: 80vh;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
 }
 
 .svg-container svg{
   width: 100%;
-  height: 800px;
+  height: 100%;
+  // background: url('https://lorempixel.com/1200/1200/technics');
 }
 
 .svg-tools {
+  position: fixed;
+  bottom: 0;
   display: flex;
   align-items: center;
   margin: 8px 0 0 ;
@@ -23,6 +33,9 @@
   padding: 4px;
   margin-right: 4px;
   cursor: pointer;
+}
+.svg-tools .item.tool.selected {
+  background: grey;
 }
 
 .svg-tools .item:hover {
@@ -52,14 +65,10 @@
   margin-right: 8px;
 }
 
-
-@keyframes selected-animation {
-  from {opacity: 1 }
-  50% { opacity: 0.5 }
-  to { opacity: 1 }
-}
-.selected {
-  animation-name: selected-animation;
-  animation-duration: 0.5s;
-  animation-iteration-count: infinite;
+.svg-wrapper {
+  width: 10000vw;
+  height: 10000vh;
+  transform: scale(.01);
+  transform-origin: 0 0;
+  position: relative;
 }
