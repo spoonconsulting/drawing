@@ -37,8 +37,6 @@ class DrawingTransform {
       this.drag.destroy()
     }
     this.initDrag()
-    this.removeHandleExcept()
-    this.initPositionHandle()
     this.initHandles()
   }
 
@@ -69,7 +67,7 @@ class DrawingTransform {
     }).filter(function (i) { return i !== null })
   }
 
-  initPositionHandle () {
+  initHandles () {
     var handle = Utils.create_element(this.svg, 'rect', {
       x: this.bbox.x - this.padding,
       y: this.bbox.y - this.padding,
@@ -91,10 +89,7 @@ class DrawingTransform {
       }
     })
     this.handles.push(positionHandle)
-  }
 
-  initHandles () {
-    if (this.rotateHandle != null) { this.rotateHandle.destroy() }
 
     var handlePosition = MatrixUtils.multVector(
       (new Referentiel(this.element)).matrixTransform(),
