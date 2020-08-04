@@ -1,344 +1,385 @@
-import { Referentiel, MatrixUtils } from "referentiel";
-import { Geometry } from "./geometry";
-import { DownListener } from "./drawing_listener.js";
-import { DrawingPathTool } from "./drawing_path_tool.js";
-import { DrawingObjectTool } from "./drawing_object_tool.js";
-import { DrawingTransform } from "./drawing_transform.js";
-import { DrawingSelect } from "./drawing_select.js";
-import { DrawingUtils } from "./drawing_utils.js";
-import { DrawingArrow } from "./drawing_arrow.js";
-import { DrawingDoubleArrow } from "./drawing_double_arrow.js";
-import { DrawingLine } from "./drawing_line.js";
-import { DrawingRect } from "./drawing_rect.js";
-import { DrawingCircle } from "./drawing_circle.js";
-import { DrawingNote } from "./drawing_note.js";
+import { Referentiel, MatrixUtils } from 'referentiel'
+import { Geometry } from './geometry'
+import { DownListener } from './drawing_listener.js'
+import { DrawingPathTool } from './drawing_path_tool.js'
+import { DrawingObjectTool } from './drawing_object_tool.js'
+import { DrawingTransform } from './drawing_transform.js'
+import { DrawingSelect } from './drawing_select.js'
+import { DrawingUtils } from './drawing_utils.js'
+import { DrawingArrow } from './drawing_arrow.js'
+import { DrawingDoubleArrow } from './drawing_double_arrow.js'
+import { DrawingLine } from './drawing_line.js'
+import { DrawingRect } from './drawing_rect.js'
+import { DrawingCircle } from './drawing_circle.js'
+import { DrawingNote } from './drawing_note.js'
 
 class Drawing {
-  constructor(svg1, options1 = {}) {
-    var base, base1;
-    this.svg = svg1;
-    this.options = options1;
+  constructor (svg1, options1 = {}) {
+    var base, base1
+    this.svg = svg1
+    this.options = options1
     this._init();
     (base = this.options).color || (base.color = '#FF0000');
-    (base1 = this.options).tool || (base1.tool = 'path');
+    (base1 = this.options).tool || (base1.tool = 'path')
   }
 
-  _init() {
+  _init () {
     this._down = new DownListener(this.svg, {
       down: (e) => {
-        return this.down(e);
+        return this.down(e)
       }
-    });
-    return DrawingUtils.style(this.svg, 'cursor', 'crosshair');
+    })
+    return DrawingUtils.style(this.svg, 'cursor', 'crosshair')
   }
 
-  down(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  down (e) {
+    e.preventDefault()
+    e.stopPropagation()
     if (this._tool) {
-      return;
+      return
     }
     if (this.selected != null) {
-      this.select(null);
+      this.select(null)
     }
     switch (this.options.tool) {
       case 'arrow':
-        return this._drawing_object(DrawingArrow, e);
+        this._drawingObject(DrawingArrow, e)
+        break
       case 'double-arrow':
-        return this._drawing_object(DrawingDoubleArrow, e);
+        this._drawingObject(DrawingDoubleArrow, e)
+        break
       case 'line':
-        return this._drawing_object(DrawingLine, e);
+        this._drawingObject(DrawingLine, e)
+        break
       case 'circle':
-        return this._drawing_object(DrawingCircle, e);
+        this._drawingObject(DrawingCircle, e)
+        break
       case 'rect':
-        return this._drawing_object(DrawingRect, e);
+        this._drawingObject(DrawingRect, e)
+        break
       case 'note':
-        return this._drawing_object(DrawingNote, e);
+        this._drawingObject(DrawingNote, e)
+        break
       default:
-        return this._tool = new DrawingPathTool(this.svg, {
+        this._tool = new DrawingPathTool(this.svg, {
           color: this.options.color,
           size: this.options.size,
           end: (element) => {
-            this._tool = null;
-            return this._new_callback(element);
+            this._tool = null
+            return this._newCallback(element)
           },
           cancel: () => {
-            this._tool = null;
-            return this.select(e.target);
+            this._tool = null
+            return this.select(e.target)
           }
-        });
+        })
     }
   }
 
-  _drawing_object(object_class, e) {
-    return this._tool = new DrawingObjectTool(this.svg, {
+  _drawingObject (objectClass, e) {
+    this._tool = new DrawingObjectTool(this.svg, {
       color: this.options.color,
       size: this.options.size,
-      prompt_text: this.options.prompt_text,
-      object_class: object_class,
+      promptText: this.options.promptText,
+      objectClass: objectClass,
       end: (element) => {
-        this._tool = null;
-        return this._new_callback(element);
+        this._tool = null
+        return this._newCallback(element)
       },
       cancel: () => {
-        this._tool = null;
-        return this.select(e.target);
+        this._tool = null
+        return this.select(e.target)
       }
-    });
+    })
   }
 
-  select(element) {
-    var type;
+  select (element) {
+    var type
     if (element == null) {
       if (this._transform != null) {
-        this._transform.destroy();
+        this._transform.destroy()
       }
-      this.selected = null;
-      this._select_callback();
-      return false;
+      this.selected = null
+      this.selectCallback()
+      return false
     }
     if (element === this.svg) {
-      return false;
+      return false
     }
     if (element.parentNode !== this.svg) {
-      return this.select(element.parentNode);
+      return this.select(element.parentNode)
     }
     if (this.selected !== element) {
       if (this._transform != null) {
-        this._transform.destroy();
+        this._transform.destroy()
       }
-      this.selected = element;
-      this._select_callback();
-      type = element.getAttribute('data-sharinpix-type');
+      this.selected = element
+      this.selectCallback()
+      type = element.getAttribute('data-sharinpix-type')
       switch (type) {
         case 'text':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
+        case 'text-with-background':
+          this._transform = this.transform(this.selected)
+          break
         case 'sticker':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
         case 'path':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
         case 'rect':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
         case 'arrow':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
         case 'double-arrow':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
         case 'line':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
         case 'circle':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
         case 'note':
-          this._transform = this.transform(this.selected);
-          break;
+          this._transform = this.transform(this.selected)
+          break
         default:
-          this._transform = new DrawingSelect(this.selected);
+          this._transform = new DrawingSelect(this.selected)
       }
-      return true;
+      return true
     } else {
-      return this.select(null);
+      return this.select(null)
     }
   }
 
-  _select_callback() {
+  selectCallback () {
     if (this.options.selected != null) {
-      return this.options.selected(this.selected);
+      return this.options.selected(this.selected)
     }
   }
 
-  _new_callback(element) {
+  _newCallback (element) {
     if (this.options.new != null) {
-      return this.options.new(element);
+      return this.options.new(element)
     }
   }
 
-  transform(element) {
+  transform (element) {
     return new DrawingTransform(element, {
       click: () => {
-        var child, i, len, parts, ref, text, text_element;
         if (element.attributes['data-sharinpix-type'] == null) {
-          return;
+          return
         }
-        switch (element.attributes['data-sharinpix-type'].value) {
+        var type = element.attributes['data-sharinpix-type'].value
+        switch (type) {
+          case 'text-with-background':
           case 'text':
-            if (this.options.prompt_text) {
-              text_element = element.children[0];
-              if (text_element.children.length > 0) {
-                parts = [];
-                ref = text_element.children;
-                for (i = 0, len = ref.length; i < len; i++) {
-                  child = ref[i];
-                  parts.push(child.innerText || child.textContent);
+            if (this.options.promptText) {
+              var textElement = element.querySelector('text')
+              var text
+              if (textElement.children.length > 0) {
+                var parts = []
+                var ref = textElement.children
+                var len = ref.length
+                for (var i = 0; i < len; i++) {
+                  var child = ref[i]
+                  parts.push(child.innerText || child.textContent)
                 }
-                text = parts.join("\n");
+                text = parts.join('\n')
               } else {
-                text = text_element.innerText || text_element.textContent;
+                text = textElement.innerText || textElement.textContent
               }
-              return this.options.prompt_text(text, (input) => {
-                if (input !== '') {
-                  DrawingUtils.edit_text(element.children[0], input);
-                }
-                this.select(null);
-                return this.select(element);
-              });
+              this.options.promptText(text, (input) => {
+                DrawingUtils.edit_text(textElement, input)
+                this.select(element)
+              })
             }
-            break;
+            if (type === 'text-with-background') {
+              this.setTextBackgroundSize(element)
+            }
+            break
           case 'note':
-            if (this.options.prompt_text) {
-              return this.options.prompt_text(element.getAttribute('data-sharinpix-note-text'), function(input) {
+            if (this.options.promptText) {
+              this.options.promptText(element.getAttribute('data-sharinpix-note-text'), function (input) {
                 if (input !== '') {
-                  return element.setAttribute('data-sharinpix-note-text', input);
+                  return element.setAttribute('data-sharinpix-note-text', input)
                 }
-              });
+              })
             }
         }
       },
-      end: function() {},
-      cancel: function() {}
-    });
+      end: function () {},
+      cancel: function () {}
+    })
   }
 
-  setSize(size) {
-    return this.options.size = size;
+  setSize (size) {
+    this.options.size = size
   }
 
-  setTool(tool) {
-    return this.options.tool = tool;
+  setTool (tool) {
+    this.options.tool = tool
   }
 
-  setColor(color) {
-    var element;
-    this.options.color = color;
+  setColor (color) {
+    var element
+    this.options.color = color
     if (this.selected == null) {
-      return;
+      return
     }
-    element = this.selected.firstChild;
+    element = this.selected.firstChild
     if (element == null) {
-      return;
+      return
     }
-    DrawingUtils.style(this.selected, 'fill', color);
-    DrawingUtils.style(this.selected, 'stroke', color);
+    DrawingUtils.style(this.selected, 'fill', color)
+    DrawingUtils.style(this.selected, 'stroke', color)
+    if (this.selected.attributes['data-sharinpix-type'].value === 'text-with-background') {
+      var rect_element = this.selected.querySelector('rect')
+      DrawingUtils.style(rect_element, 'fill', color)
+      var text_element = this.selected.querySelector('text')
+      DrawingUtils.style(text_element, 'fill', DrawingUtils.contrastColor(this.options.color))
+      DrawingUtils.style(text_element, 'stroke', DrawingUtils.contrastColor(this.options.color))
+    }
   }
 
-  delete() {
-    var element;
+  delete () {
+    var element
     if (this.selected == null) {
-      this.selectLast();
+      this.selectLast()
     }
     if (this.selected == null) {
-      return;
+      return
     }
-    element = this.selected;
-    this.select(null);
-    element.parentNode.removeChild(element);
-    return this.selectLast();
+    element = this.selected
+    this.select(null)
+    element.parentNode.removeChild(element)
+    return this.selectLast()
   }
 
-  selectLast() {
+  selectLast () {
     if (this.selected) {
-      return;
+      return
     }
     if (this.svg.lastChild != null) {
-      return this.select(this.svg.lastChild);
+      return this.select(this.svg.lastChild)
     }
   }
 
-  rotation_matrix() {
-    var angle, matrix, referentiel;
-    referentiel = new Referentiel(this.svg);
-    matrix = referentiel.matrix();
-    angle = -Math.atan2(-matrix[0][1], matrix[1][1]);
-    return [[Math.cos(angle), -Math.sin(angle), 0], [Math.sin(angle), Math.cos(angle), 0], [0, 0, 1]];
+  rotationMatrix () {
+    var angle, matrix, referentiel
+    referentiel = new Referentiel(this.svg)
+    matrix = referentiel.matrix()
+    angle = -Math.atan2(-matrix[0][1], matrix[1][1])
+    return [[Math.cos(angle), -Math.sin(angle), 0], [Math.sin(angle), Math.cos(angle), 0], [0, 0, 1]]
   }
 
-  addText(input) {
-    var center, group, referentiel, size, text;
-    size = Math.round(DrawingUtils.size(this.svg) * 0.05);
-    referentiel = new Referentiel(this.svg);
-    center = referentiel.global_to_local([window.innerWidth / 2, window.innerHeight / 2]);
-    group = DrawingUtils.create_element(this.svg, 'g');
-    group.setAttribute('data-sharinpix-type', 'text');
-    DrawingUtils.style(group, 'fill', this.options.color);
-    DrawingUtils.style(group, 'stroke', this.options.color);
-    text = DrawingUtils.create_element(group, 'text', {
+  addText (input, options = {}) {
+    var size = Math.round(DrawingUtils.size(this.svg) * 0.05)
+    var referentiel = new Referentiel(this.svg)
+    var center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
+    var group = DrawingUtils.create_element(this.svg, 'g')
+    var text = DrawingUtils.create_element(group, 'text', {
       'stroke-width': 0,
       'font-size': size,
       'font-family': 'sans-serif'
-    });
-    DrawingUtils.edit_text(text, input);
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotation_matrix()));
-    this._new_callback(group);
-    return this.select(text);
+    })
+    DrawingUtils.edit_text(text, input)
+    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotationMatrix()))
+
+    if (options.withBackground === true) {
+      group.setAttribute('data-sharinpix-type', 'text-with-background')
+      var rect = DrawingUtils.create_element(group, 'rect', {
+        'stroke-width': 0,
+        fill: this.options.color
+      })
+      group.insertBefore(rect, text)
+      DrawingUtils.style(group, 'fill', DrawingUtils.contrastColor(this.options.color))
+      DrawingUtils.style(group, 'stroke', DrawingUtils.contrastColor(this.options.color))
+      this.setTextBackgroundSize(group)
+    } else {
+      group.setAttribute('data-sharinpix-type', 'text')
+      DrawingUtils.style(group, 'fill', this.options.color)
+      DrawingUtils.style(group, 'stroke', this.options.color)
+    }
+    // this._newCallback(group)
+    return this.select(text)
   }
 
-  export(options, callback) {
-    var container, node, selected, svg;
-    selected = this.selected;
-    this.destroy();
-    container = document.createElement('div');
-    container.setAttribute('style', 'display: none;');
-    document.body.appendChild(container);
-    node = this.svg.cloneNode(true);
-    container.appendChild(node);
+  setTextBackgroundSize (element) {
+    console.log('Set Background !!!Background', element)
+    var rectElement = element.querySelector('rect')
+    var textElement = element.querySelector('text')
+    var bbox = textElement.getBBox()
+    DrawingUtils.style(rectElement, 'x', bbox.x)
+    DrawingUtils.style(rectElement, 'y', bbox.y)
+    DrawingUtils.style(rectElement, 'width', bbox.width)
+    return DrawingUtils.style(rectElement, 'height', bbox.height)
+  }
+
+  export (options, callback) {
+    var container, node, selected, svg
+    selected = this.selected
+    this.destroy()
+    container = document.createElement('div')
+    container.setAttribute('style', 'display: none;')
+    document.body.appendChild(container)
+    node = this.svg.cloneNode(true)
+    container.appendChild(node)
     if (options.width) {
-      node.setAttribute('width', options.width);
+      node.setAttribute('width', options.width)
     }
     if (options.height) {
-      node.setAttribute('height', options.height);
+      node.setAttribute('height', options.height)
     }
-    svg = container.innerHTML;
-    document.body.removeChild(container);
-    callback(svg);
-    this._init();
+    svg = container.innerHTML
+    document.body.removeChild(container)
+    callback(svg)
+    this._init()
     if (selected) {
-      return this.select(selected);
+      return this.select(selected)
     }
   }
 
-  addImage(dataUrl, options) {
-    var center, dataImg, group, height, image, referentiel, scale, width;
-    dataImg = new window.Image();
-    dataImg.src = image;
-    width = options.width || 100;
-    height = options.height || 100;
-    group = DrawingUtils.create_element(this.svg, 'g');
-    group.setAttribute('data-sharinpix-type', 'sticker');
+  addImage (dataUrl, options) {
+    var center, dataImg, group, height, image, referentiel, scale, width
+    dataImg = new window.Image()
+    dataImg.src = image
+    width = options.width || 100
+    height = options.height || 100
+    group = DrawingUtils.create_element(this.svg, 'g')
+    group.setAttribute('data-sharinpix-type', 'sticker')
     if (options.id) {
-      group.setAttribute('data-sharinpix-sticker-id', options.id);
+      group.setAttribute('data-sharinpix-sticker-id', options.id)
     }
     image = DrawingUtils.create_element(group, 'image', {
       x: '0',
       y: '0',
       width: width,
       height: height
-    });
-    image.setAttributeNS("http://www.w3.org/1999/xlink", 'xlink:href', dataUrl);
-    referentiel = new Referentiel(this.svg);
-    center = referentiel.global_to_local([window.innerWidth / 2, window.innerHeight / 2]);
-    scale = (DrawingUtils.size(this.svg) / 8) / width;
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[scale, 0, center[0]], [0, scale, center[1]], [0, 0, 1]], this.rotation_matrix(), [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]));
-    this._new_callback(group);
-    return this.select(group);
+    })
+    image.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', dataUrl)
+    referentiel = new Referentiel(this.svg)
+    center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
+    scale = (DrawingUtils.size(this.svg) / 8) / width
+    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[scale, 0, center[0]], [0, scale, center[1]], [0, 0, 1]], this.rotationMatrix(), [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]))
+    this._newCallback(group)
+    return this.select(group)
   }
 
-  destroy() {
+  destroy () {
     if (this.selected) {
-      this.select(null);
+      this.select(null)
     }
-    DrawingUtils.style(this.svg, 'cursor', 'auto');
+    DrawingUtils.style(this.svg, 'cursor', 'auto')
     if (this._transform) {
-      this._transform.destroy();
+      this._transform.destroy()
     }
-    return this._down.destroy();
+    return this._down.destroy()
   }
-
 };
 
-export { Referentiel, Drawing, MatrixUtils, Geometry };
+export { Referentiel, Drawing, MatrixUtils, Geometry }

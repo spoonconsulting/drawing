@@ -1,5 +1,4 @@
-const path = require('path');
-const webpack = require('webpack');
+const path = require('path')
 
 module.exports = {
   mode: 'production',
@@ -14,16 +13,25 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.html$/,
+        use: {
+          loader: 'raw-loader'
+        }
+      },
+      {
         test: /\.js$/,
         use: {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env', {targets: {ie: '10'}}]
+              ['@babel/preset-env', { targets: { ie: '10' } }]
             ]
           }
         }
       }
     ]
+  },
+  optimization: {
+    minimize: false
   }
-};
+}

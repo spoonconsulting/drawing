@@ -6,21 +6,39 @@ html(lang='en')
     meta(name='description', content='')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     script(type='text/javascript', src='../dist/drawing.js')
+    script(type='text/javascript', src='node_modules/jquery/dist/jquery.js')
     script(type='text/javascript', src='demo.js')
     link(rel="stylesheet" media="all" href="../node_modules/reset-css/reset.css")
     link(rel="stylesheet" media="all" href="./demo.css")
+    link(rel="stylesheet" media="all" href="./viewer.css")
   body
+    //.viewer
+      .viewer-background
+      .viewer-content
+        .viewer-container(style="background: rgba(255, 0, 0, 0.4); display: none;")
+          p -1
+          //img(src="http://lorempixel.com/800/800?t=0")
+        .viewer-container(style="background: rgba(0, 255, 0, 0.4);")
+          //.svg-wrapper
+          .svg-container
+            svg viewport="0 0 10000 10000"
+          //img(src="./plan.svg")
+          //img(src="http://lorempixel.com/400/200?t=0")
+        .viewer-container(style="background: rgba(0, 0, 255, 0.4); display: none;")
+          p 1
+          //img(src="http://lorempixel.com/400/200?t=0")
     .svg-container
-      svg(viewbox="0 0 800 600")
+      svg
     ul.svg-tools
-      li.item(data-tool="path") Path
-      li.item(data-tool="arrow") Arrow
-      li.item(data-tool="double-arrow") Double arrow
-      li.item(data-tool="line") Line
-      li.item(data-tool="circle") Circle
-      li.item(data-tool="rect") Rectangle
-      li.item(data-tool="Note") Note
-      li.item(data-tool="text") Text
+      li.item.tool.selected(data-tool="path") Path
+      li.item.tool(data-tool="arrow") Arrow
+      li.item.tool(data-tool="double-arrow") Double arrow
+      li.item.tool(data-tool="line") Line
+      li.item.tool(data-tool="circle") Circle
+      li.item.tool(data-tool="rect") Rectangle
+      li.item.tool(data-tool="note") Note
+      li.item.action(data-action="text") Text
+      li.item.action(data-action="textWithBackground") Text with background
       li.separator
       li.item.color(style="background-color: #e83100;" data-color="#e83100")
       li.item.color(style="background-color: #00bae8;" data-color="#00bae8")

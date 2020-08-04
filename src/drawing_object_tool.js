@@ -1,95 +1,94 @@
 
-var DrawingObjectTool;
-
 import {
   MoveListener,
   UpListener
-} from "./drawing_listener.js";
+} from './drawing_listener.js'
 
 import {
   DrawingUtils
-} from "./drawing_utils.js";
+} from './drawing_utils.js'
+
+var DrawingObjectTool
 
 DrawingObjectTool = class DrawingObjectTool {
-  constructor(element, options) {
-    var ObjectClass;
-    this.element = element;
-    this.options = options;
-    this.destroyed = false;
-    this._points = [];
+  constructor (element, options) {
+    var ObjectClass
+    this.element = element
+    this.options = options
+    this.destroyed = false
+    this._points = []
     this._up_listener = new UpListener(this.element, {
       up: (e) => {
-        return this.up(e);
+        return this.up(e)
       }
-    });
+    })
     this._move_listener = new MoveListener(this.element, {
       move: (touches) => {
-        return this.move(touches);
+        return this.move(touches)
       }
-    });
+    })
     this.group = DrawingUtils.create_element(this.element, 'g', {
-      'data-sharinpix-type': this.options.object_class.type
-    });
-    this.size = DrawingUtils.size(this.element) * 0.01;
-    ObjectClass = this.options.object_class;
+      'data-sharinpix-type': this.options.objectClass.type
+    })
+    this.size = DrawingUtils.size(this.element) * 0.01
+    ObjectClass = this.options.objectClass
     this.object = new ObjectClass({
       parent: this.group,
       color: this.options.color,
       size: this.size,
-      prompt_text: this.options.prompt_text
-    });
+      promptText: this.options.promptText
+    })
   }
 
-  up(e) {
+  up (e) {
     if (this.destroyed) {
-      return;
+      return
     }
-    e.preventDefault();
-    e.stopPropagation();
-    if (this.object.big_enough()) {
+    e.preventDefault()
+    e.stopPropagation()
+    if (this.object.bigEnough()) {
       this.object.end(() => {
-        return this.options.end(this.group);
-      });
+        return this.options.end(this.group)
+      })
     } else {
-      this.options.cancel();
-      DrawingUtils.remove(this.group);
+      this.options.cancel()
+      DrawingUtils.remove(this.group)
     }
-    return this.destroy();
+    return this.destroy()
   }
 
-  round(value) {
-    return Math.round(value);
+  round (value) {
+    return Math.round(value)
   }
 
-  round_point(point) {
-    return [this.round(point[0]), this.round(point[1])];
+  roundPoint (point) {
+    return [this.round(point[0]), this.round(point[1])]
   }
 
-  move(touches) {
+  move (touches) {
     if (this.destroyed) {
-      return;
+      return
     }
     if (touches.length > 1) {
-      return this.destroy();
+      return this.destroy()
     }
-    this.end = this.round_point(touches[0]);
+    this.end = this.roundPoint(touches[0])
     if (!this.start) {
-      this.start = this.end;
+      this.start = this.end
     }
-    return this.object.update(this.start, this.end);
+    return this.object.update(this.start, this.end)
   }
 
-  destroy() {
+  destroy () {
     if (this.destroyed) {
-      return;
+      return
     }
-    this.destroyed = true;
-    this._up_listener.destroy();
-    return this._move_listener.destroy();
+    this.destroyed = true
+    this._up_listener.destroy()
+    return this._move_listener.destroy()
   }
-
-};
+}
 
 export {
   DrawingObjectTool
-};
+}
