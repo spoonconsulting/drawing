@@ -69,8 +69,6 @@ class Drag {
     e.stopPropagation()
     if (Utils.eventInScope(e, this.container)) { return }
     if (e.touches !== undefined && e.touches !== null && e.touches.length > 0) {
-      this.start = Utils.extractTouches(e)
-      this.lastMoveEvent = null
       return
     }
     this.dragging = false
