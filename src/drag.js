@@ -33,11 +33,10 @@ class Drag {
       var touches = Utils.extractTouches(this.lastMoveEvent)
       if (this.start === null || this.start.length !== touches.length) {
         this.containerReferentiel = new Referentiel(this.container)
-        touches = touches.map((touch) => {
+        this.matrix = this.referentiel.matrixTransform()
+        this.start = touches.map((touch) => {
           return this.containerReferentiel.globalToLocal(touch)
         })
-        this.matrix = this.referentiel.matrixTransform()
-        this.start = touches
       }
       touches = touches.map((touch) => {
         return this.containerReferentiel.globalToLocal(touch)
@@ -49,7 +48,7 @@ class Drag {
         estimate = this.options.transformations || 'TSR'
         this.pivot = this.options.pivot
       } else {
-        if (this.pivot === undefined) {
+        if (this.pivot === undefined || this.pivot === null) {
           var bbox = this.element.getBoundingClientRect()
           this.pivot = [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2]
         }
