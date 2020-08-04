@@ -4,7 +4,6 @@ import { Referentiel } from 'referentiel'
 
 class DrawingPathTool {
   constructor (element, options) {
-    console.log('Drawing Path Tool !')
     this.element = element
     this.options = options
     this.destroyed = false
@@ -31,7 +30,6 @@ class DrawingPathTool {
   up (e) {
     if (Utils.eventInScope(e, this.element)) { return }
     if (this.destroyed) { return }
-    console.log('UP !!')
     e.preventDefault()
     e.stopPropagation()
     if (this._points.length > 3) {
@@ -93,7 +91,6 @@ class DrawingPathTool {
       var touches = Utils.extractTouches(this.lastEvent)
 
       var newPoint = this.roundPoint(this.referentiel.globalToLocal(touches[0]))
-      console.log('New Point !', newPoint)
       if (this._points.length > 0) {
         var lastPoint = this._points[this._points.length - 1]
         if (Geometry.distance(newPoint, lastPoint) <= 3) {
@@ -109,7 +106,6 @@ class DrawingPathTool {
   }
 
   destroy () {
-    console.log('DESTROY!')
     if (this.destroyed) { return }
     this._upListener()
     this._moveListener()

@@ -67,7 +67,6 @@ class DrawingTransform {
       }
       return handle
     }).filter(function (i) { return i !== null })
-    console.log('after remove', this.handles)
   }
 
   initPositionHandle () {

@@ -310,7 +310,6 @@ class Drawing {
   }
 
   setTextBackgroundSize (element) {
-    console.log('Set Background !!!Background', element)
     var rectElement = element.querySelector('rect')
     var textElement = element.querySelector('text')
     var bbox = textElement.getBBox()
