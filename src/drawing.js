@@ -237,6 +237,13 @@ class Drawing {
     }
     DrawingUtils.style(this.selected, 'fill', color)
     DrawingUtils.style(this.selected, 'stroke', color)
+    if (this.selected.attributes['data-sharinpix-type'].value === 'text-with-background') {
+      var rect_element = this.selected.querySelector('rect')
+      DrawingUtils.style(rect_element, 'fill', color)
+      var text_element = this.selected.querySelector('text')
+      DrawingUtils.style(text_element, 'fill', DrawingUtils.contrastColor(this.options.color))
+      DrawingUtils.style(text_element, 'stroke', DrawingUtils.contrastColor(this.options.color))
+    }
   }
 
   delete () {

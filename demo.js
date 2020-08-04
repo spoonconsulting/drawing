@@ -16,6 +16,9 @@ $(function () {
     $(this).addClass('selected')
     drawing.setTool($(this).data('tool'))
   })
+  $('body').on('click', '.svg-tools .item.color', function () {
+    drawing.setColor($(this).data('color'))
+  })
   $('body').on('click', '.svg-tools .item.action', function () {
     var action = $(this).data('action')
     var options = {}
