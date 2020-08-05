@@ -19,16 +19,14 @@ class DrawingArrow {
   }
 
   update (from, to) {
-    var angle
     this.from = from
     this.to = to
     if (this.bigEnough()) {
       this.options.parent.setAttribute('opacity', 1)
       this.path.setAttribute('d', `M${this.from[0]},${this.from[1]} L${this.to[0]},${this.to[1]}`)
-      angle = Geometry.angle(this.from, [this.from[0], this.from[0] + 1000], this.to)
-      return DrawingUtils.apply_matrix(this.arrow, Geometry.multiply_matrix(Geometry.translation_matrix(this.to), Geometry.rotation_matrix(angle), Geometry.translation_matrix([0, this.options.arrow_size / 3])))
+      DrawingUtils.apply_matrix(this.arrow, Geometry.multiply_matrix(Geometry.translation_matrix(this.to), Geometry.rotation_matrix(this.angle()), Geometry.translation_matrix([0, this.options.arrow_size / 3])))
     } else {
-      return this.options.parent.setAttribute('opacity', 0)
+      this.options.parent.setAttribute('opacity', 0)
     }
   }
 
