@@ -90,7 +90,6 @@ class DrawingTransform {
     })
     this.handles.push(positionHandle)
 
-
     var handlePosition = MatrixUtils.multVector(
       (new Referentiel(this.element)).matrixTransform(),
       [this.bbox.x + this.bbox.width + this.padding, this.bbox.y + this.bbox.height + this.padding, 1]
@@ -100,7 +99,7 @@ class DrawingTransform {
       [this.bbox.x + this.bbox.width / 2, this.bbox.y + this.bbox.height / 2, 1]
     )
 
-    var handle = Utils.create_element(this.svg, 'g', {})
+    handle = Utils.create_element(this.svg, 'g', {})
     Utils.create_element(handle, 'circle', {
       r: this.size / 2,
       fill: 'white'
