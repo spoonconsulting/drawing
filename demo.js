@@ -3,7 +3,8 @@ $(function () {
   var drawing = new window.Drawing.Drawing(document.querySelector('svg'), {
     promptText: function (placeholder, callback) {
       callback(window.prompt('Enter some text:', placeholder))
-    }
+    },
+    handles: false
   })
 
   drawing.setColor('#e83100')

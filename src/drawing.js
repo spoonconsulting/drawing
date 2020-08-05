@@ -170,6 +170,7 @@ class Drawing {
 
   transform (element) {
     return new DrawingTransform(element, {
+      handles: this.options.handles,
       click: () => {
         if (element.attributes['data-sharinpix-type'] == null) {
           return

@@ -90,6 +90,8 @@ class DrawingTransform {
     })
     this.handles.push(positionHandle)
 
+    if (this.options.handles === false) { return }
+
     var handlePosition = MatrixUtils.multVector(
       (new Referentiel(this.element)).matrixTransform(),
       [this.bbox.x + this.bbox.width + this.padding, this.bbox.y + this.bbox.height + this.padding, 1]
