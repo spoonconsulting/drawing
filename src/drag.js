@@ -52,7 +52,7 @@ class Drag {
           var bbox = this.element.getBBox()
           this.pivot = MatrixUtils.multVector(
             (new Referentiel(this.element)).matrixTransform(),
-            [bbox.x + bbox.width /2, bbox.y + bbox.height /2, 1]
+            [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2, 1]
           ).slice(0, 2)
         }
       }
