@@ -49,11 +49,13 @@ class Drag {
         this.pivot = this.options.pivot
       } else {
         if (this.pivot === undefined || this.pivot === null) {
-          var bbox = this.element.getBoundingClientRect()
-          this.pivot = [bbox.x + bbox.width / 2, bbox.y + bbox.height / 2]
+          var bbox = this.element.getBBox()
+          this.pivot = MatrixUtils.multVector(
+            (new Referentiel(this.element)).matrixTransform(),
+            [bbox.x + bbox.width /2, bbox.y + bbox.height /2, 1]
+          ).slice(0, 2)
         }
       }
-
       this.lastEstimate = Nudged.estimate(estimate, this.start, touches, this.pivot)
       var transformationMatrix = Utils.nudgedMatrix(this.lastEstimate.getMatrix())
       this.matrix = MatrixUtils.mult(transformationMatrix, this.matrix)
