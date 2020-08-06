@@ -145,7 +145,7 @@ class DrawingTransform {
         this.removeHandleExcept(rotateHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      cancel: ()=> { this.init() },
+      cancel: () => { this.init() },
       end: () => {
         this.init()
         if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
@@ -180,7 +180,7 @@ class DrawingTransform {
         this.init()
         if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
       },
-      cancel: ()=> { this.init() }
+      cancel: () => { this.init() }
     })
     this.handles.push(scaleHandle)
   }

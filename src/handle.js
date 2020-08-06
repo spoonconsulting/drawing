@@ -1,4 +1,3 @@
-import { DrawingUtils } from './drawing_utils.js'
 import { Drag } from './drag.js'
 
 class Handle {
@@ -7,13 +6,13 @@ class Handle {
     this.options = options
     this.destroyed = false
 
-    var start = options.start || function() {}
+    var start = options.start || function () {}
     options.start = () => {
       this.default_opacity = this.element.style.opacity
       this.element.style.opacity = 0
       start()
     }
-    var end = options.end || function() {}
+    var end = options.end || function () {}
     options.end = () => {
       this.element.style.opacity = this.default_opacity
       end()

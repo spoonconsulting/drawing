@@ -172,7 +172,7 @@ class Drawing {
   transform (element) {
     return new DrawingTransform(element, {
       handles: this.options.handles,
-      end: ()=> {
+      end: () => {
         this.onChange()
       },
       click: () => {
@@ -217,9 +217,10 @@ class Drawing {
               })
             }
         }
-      },
+      }
     })
   }
+
   onChange () {
     if (this.options.onChange !== undefined && this.options.onChange !== null) {
       this.options.onChange()

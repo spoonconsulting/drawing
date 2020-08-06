@@ -4,7 +4,7 @@ $(function () {
     promptText: function (placeholder, callback) {
       callback(window.prompt('Enter some text:', placeholder))
     },
-    onChange: function() {
+    onChange: function () {
       console.log('Annotation changed !')
     }
   })
@@ -37,7 +37,7 @@ $(function () {
     }
   })
 
-  /* var viewer = new Drawing.Viewer({
+  /* new Drawing.Viewer({
     elem: document.getElementsByClassName('viewer')[0],
     callback: (changes, positions) => {
       changes.forEach((change) => {
