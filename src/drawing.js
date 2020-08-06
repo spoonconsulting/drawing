@@ -95,7 +95,7 @@ class Drawing {
 
   select (element) {
     var type
-    if (element == null) {
+    if (element === null) {
       if (this._transform != null) {
         this._transform.destroy()
       }
@@ -166,11 +166,15 @@ class Drawing {
     if (this.options.new != null) {
       return this.options.new(element)
     }
+    this.onChange()
   }
 
   transform (element) {
     return new DrawingTransform(element, {
       handles: this.options.handles,
+      end: ()=> {
+        this.onChange()
+      },
       click: () => {
         if (element.attributes['data-sharinpix-type'] == null) {
           return
@@ -194,6 +198,7 @@ class Drawing {
               } else {
                 text = textElement.innerText || textElement.textContent
               }
+              this.select(null)
               this.options.promptText(text, (input) => {
                 DrawingUtils.edit_text(textElement, input)
                 this.select(element)
@@ -213,9 +218,12 @@ class Drawing {
             }
         }
       },
-      end: function () {},
-      cancel: function () {}
     })
+  }
+  onChange () {
+    if (this.options.onChange !== undefined && this.options.onChange !== null) {
+      this.options.onChange()
+    }
   }
 
   setSize (size) {
@@ -245,6 +253,7 @@ class Drawing {
       DrawingUtils.style(textElement, 'fill', DrawingUtils.contrastColor(this.options.color))
       DrawingUtils.style(textElement, 'stroke', DrawingUtils.contrastColor(this.options.color))
     }
+    this.onChange()
   }
 
   delete () {
@@ -258,7 +267,8 @@ class Drawing {
     element = this.selected
     this.select(null)
     element.parentNode.removeChild(element)
-    return this.selectLast()
+    this.selectLast()
+    this.onChange()
   }
 
   selectLast () {

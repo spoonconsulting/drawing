@@ -4,7 +4,9 @@ $(function () {
     promptText: function (placeholder, callback) {
       callback(window.prompt('Enter some text:', placeholder))
     },
-    handles: false
+    onChange: function() {
+      console.log('Annotation changed !')
+    }
   })
 
   drawing.setColor('#e83100')
@@ -29,6 +31,9 @@ $(function () {
     }
     if (action === 'text') {
       drawing.addText(window.prompt('Enter some text:', ''), options)
+    }
+    if (action === 'delete') {
+      drawing.delete()
     }
   })
 

@@ -74,11 +74,7 @@ class Drag {
     this.dragging = false
     this._moveListener()
     this._upListener()
-    if (this.lastEstimate != null) {
-      if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-    } else {
-      if (this.options.cancel !== undefined && this.options.cancel !== null) { this.options.cancel() }
-    }
+    if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
   }
 
   move (e) {

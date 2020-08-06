@@ -8,7 +8,6 @@ class DrawingTransform {
   constructor (element1, options) {
     this.element = element1
     this.options = options
-    this.destroyed = false
     this.svg = this.element.parentNode
     while (this.svg.localName !== 'svg') {
       this.svg = this.svg.parentNode
@@ -24,10 +23,10 @@ class DrawingTransform {
       time = Date.now() - this.last_init
       if (time < 500 && this.options.click) {
         this.options.click()
+        return
       }
     }
     this.last_init = Date.now()
-    this.element.style.pointerEvents = 'all'
     this.referentiel = new Referentiel(this.element)
     this.containerReferentiel = new Referentiel(this.svg)
     this.size = Geometry.distance(this.containerReferentiel.globalToLocal([0, 0]), this.containerReferentiel.globalToLocal([20, 20]))
@@ -45,13 +44,9 @@ class DrawingTransform {
       start: () => {
         this.removeHandleExcept()
       },
-      cancel: () => {
-        this.init()
-        return this.options.cancel()
-      },
       end: () => {
-        this.options.end()
-        return this.init()
+        this.init()
+        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
       },
       container: this.svg
     })
@@ -59,15 +54,16 @@ class DrawingTransform {
 
   removeHandleExcept (exceptHandle) {
     this.handles = this.handles.map((handle) => {
-      if (handle !== exceptHandle) {
-        handle.destroy()
-        return null
+      if (handle === exceptHandle) {
+        return handle
       }
-      return handle
+      handle.destroy()
+      return null
     }).filter(function (i) { return i !== null })
   }
 
   initHandles () {
+    this.removeHandleExcept()
     var handle = Utils.create_element(this.svg, 'rect', {
       x: this.bbox.x - this.padding,
       y: this.bbox.y - this.padding,
@@ -86,6 +82,7 @@ class DrawingTransform {
       },
       end: () => {
         this.init()
+        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
       }
     })
     this.handles.push(positionHandle)
@@ -118,7 +115,10 @@ class DrawingTransform {
         this.removeHandleExcept(rotateScaleHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      end: () => { this.init() }
+      end: () => {
+        this.init()
+        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
+      }
     })
     this.handles.push(rotateScaleHandle)
 
@@ -145,7 +145,11 @@ class DrawingTransform {
         this.removeHandleExcept(rotateHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      end: () => { this.init() }
+      cancel: ()=> { this.init() },
+      end: () => {
+        this.init()
+        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
+      }
     })
     this.handles.push(rotateHandle)
 
@@ -172,19 +176,18 @@ class DrawingTransform {
         this.removeHandleExcept(scaleHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      end: () => { this.init() }
+      end: () => {
+        this.init()
+        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
+      },
+      cancel: ()=> { this.init() }
     })
     this.handles.push(scaleHandle)
   }
 
   destroy () {
-    if (this.destroyed) {
-      return
-    }
-    this.destroyed = true
     this.removeHandleExcept()
-    this.element.style.pointerEvents = ''
-    return this.drag.destroy()
+    this.drag.destroy()
   }
 }
 

@@ -7,14 +7,15 @@ class Handle {
     this.options = options
     this.destroyed = false
 
-    var start = options.start || function () {}
+    var start = options.start || function() {}
     options.start = () => {
-      DrawingUtils.style(this.element, 'opacity', 0)
+      this.default_opacity = this.element.style.opacity
+      this.element.style.opacity = 0
       start()
     }
-    var end = options.end || function () {}
+    var end = options.end || function() {}
     options.end = () => {
-      DrawingUtils.style(this.element, 'opacity', 1)
+      this.element.style.opacity = this.default_opacity
       end()
     }
     this.drag = new Drag(this.element, options)
