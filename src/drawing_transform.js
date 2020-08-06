@@ -42,6 +42,7 @@ class DrawingTransform {
   initDrag () {
     this.drag = new Drag(this.element, {
       start: () => {
+        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept()
       },
       end: () => {
@@ -75,6 +76,7 @@ class DrawingTransform {
     this.svg.insertBefore(handle, this.element)
     var positionHandle = new Handle(handle, {
       start: () => {
+        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(positionHandle)
       },
       move: () => {
@@ -112,6 +114,7 @@ class DrawingTransform {
       transformations: 'SR',
       pivot: handleCenter,
       start: () => {
+        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(rotateScaleHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
@@ -142,6 +145,7 @@ class DrawingTransform {
       transformations: 'R',
       pivot: handleCenter,
       start: () => {
+        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(rotateHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
@@ -173,6 +177,7 @@ class DrawingTransform {
       transformations: 'S',
       pivot: handleCenter,
       start: () => {
+        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(scaleHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },

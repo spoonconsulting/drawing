@@ -6,6 +6,13 @@ $(function () {
     },
     onChange: function () {
       console.log('Annotation changed !')
+    },
+    showControls: function (controls) {
+      if (controls) {
+        $('.svg-tools').show()
+      } else {
+        $('.svg-tools').hide()
+      }
     }
   })
 

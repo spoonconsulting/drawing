@@ -26,7 +26,8 @@ class Drawing {
   _init () {
     this._down = new DownListener(this.svg, {
       down: (e) => {
-        return this.down(e)
+        this.down(e)
+        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(false) }
       }
     })
     return DrawingUtils.style(this.svg, 'cursor', 'crosshair')
@@ -66,11 +67,13 @@ class Drawing {
           size: this.options.size,
           end: (element) => {
             this._tool = null
-            return this._newCallback(element)
+            this._newCallback(element)
+            if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
           },
           cancel: () => {
             this._tool = null
-            return this.select(e.target)
+            this.select(e.target)
+            if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
           }
         })
     }
@@ -84,11 +87,13 @@ class Drawing {
       objectClass: objectClass,
       end: (element) => {
         this._tool = null
-        return this._newCallback(element)
+        this._newCallback(element)
+        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
       },
       cancel: () => {
         this._tool = null
-        return this.select(e.target)
+        this.select(e.target)
+        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
       }
     })
   }
@@ -172,7 +177,11 @@ class Drawing {
   transform (element) {
     return new DrawingTransform(element, {
       handles: this.options.handles,
+      start: () => {
+        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(false) }
+      },
       end: () => {
+        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
         this.onChange()
       },
       click: () => {

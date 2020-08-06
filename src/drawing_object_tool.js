@@ -1,16 +1,7 @@
+import { MoveListener, UpListener } from './drawing_listener.js'
+import { DrawingUtils } from './drawing_utils.js'
 
-import {
-  MoveListener,
-  UpListener
-} from './drawing_listener.js'
-
-import {
-  DrawingUtils
-} from './drawing_utils.js'
-
-var DrawingObjectTool
-
-DrawingObjectTool = class DrawingObjectTool {
+class DrawingObjectTool {
   constructor (element, options) {
     var ObjectClass
     this.element = element
@@ -89,6 +80,4 @@ DrawingObjectTool = class DrawingObjectTool {
   }
 }
 
-export {
-  DrawingObjectTool
-}
+export { DrawingObjectTool }
