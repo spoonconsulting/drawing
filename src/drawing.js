@@ -326,7 +326,7 @@ class Drawing {
       DrawingUtils.style(group, 'fill', this.options.color)
       DrawingUtils.style(group, 'stroke', this.options.color)
     }
-    // this._newCallback(group)
+    this._newCallback(group)
     return this.select(text)
   }
 
