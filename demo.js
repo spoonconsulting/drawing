@@ -1,8 +1,14 @@
 var $ = window.$
+var customPrompt = function (title, placeholder) {
+  return window.prompt(title, placeholder).replace('\n', '\n')
+}
 $(function () {
   var drawing = new window.Drawing.Drawing(document.querySelector('svg'), {
     promptText: function (placeholder, callback) {
-      callback(window.prompt('Enter some text:', placeholder))
+      callback(customPrompt('Enter some text:', placeholder))
+    },
+    new: function () {
+      console.log('NEW ', arguments)
     },
     onChange: function () {
       console.log('Annotation changed !')
@@ -17,9 +23,8 @@ $(function () {
   })
 
   drawing.setColor('#e83100')
-  drawing.addText('Super !')
+  drawing.addText('Super !', { withBackground: true })
   // drawing.addText('Super !');
-  // drawing.addTextWithBackground('Plop !')
 
   $('body').on('click', '.svg-tools .item.tool', function () {
     $('.svg-tools .item.tool.selected').removeClass('selected')
@@ -37,7 +42,7 @@ $(function () {
       options = { withBackground: true }
     }
     if (action === 'text') {
-      drawing.addText(window.prompt('Enter some text:', ''), options)
+      drawing.addText(customPrompt('Enter some text:', ''), options)
     }
     if (action === 'delete') {
       drawing.delete()

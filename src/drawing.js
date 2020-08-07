@@ -162,14 +162,14 @@ class Drawing {
   }
 
   selectCallback () {
-    if (this.options.selected != null) {
+    if (this.options.selected !== null && this.options.selected !== undefined) {
       return this.options.selected(this.selected)
     }
   }
 
   _newCallback (element) {
-    if (this.options.new != null) {
-      return this.options.new(element)
+    if (this.options.new !== null && this.options.new !== undefined) {
+      this.options.new(element)
     }
     this.onChange()
   }
@@ -210,11 +210,11 @@ class Drawing {
               this.select(null)
               this.options.promptText(text, (input) => {
                 DrawingUtils.edit_text(textElement, input)
+                if (type === 'text-with-background') {
+                  this.setTextBackgroundSize(element)
+                }
                 this.select(element)
               })
-            }
-            if (type === 'text-with-background') {
-              this.setTextBackgroundSize(element)
             }
             break
           case 'note':

@@ -58,9 +58,13 @@ class Drag {
       }
       this.lastEstimate = Nudged.estimate(estimate, this.start, touches, this.pivot)
       var transformationMatrix = Utils.nudgedMatrix(this.lastEstimate.getMatrix())
-      this.matrix = MatrixUtils.mult(transformationMatrix, this.matrix)
-      Utils.apply_matrix(this.element, this.matrix)
-      if (this.options.move !== undefined && this.options.move !== null) { this.options.move(transformationMatrix) }
+      var newMatrix = MatrixUtils.mult(transformationMatrix, this.matrix)
+      var s = Math.sqrt(newMatrix[0][0] * newMatrix[0][0] + newMatrix[0][1] * newMatrix[0][1])
+      if (s > 0.1) {
+        this.matrix = newMatrix
+        Utils.apply_matrix(this.element, this.matrix)
+        if (this.options.move !== undefined && this.options.move !== null) { this.options.move(transformationMatrix) }
+      }
       this.start = touches
     }
     window.requestAnimationFrame(() => { this.tick() })
