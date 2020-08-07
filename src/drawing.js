@@ -217,9 +217,9 @@ class Drawing {
               })
             }
             break
-          case 'note':
+          default:
             if (this.options.promptText) {
-              this.options.promptText(element.getAttribute('data-sharinpix-note-text'), function (input) {
+              this.options.promptText(element.getAttribute('data-sharinpix-note-text') || '', function (input) {
                 if (input !== '') {
                   return element.setAttribute('data-sharinpix-note-text', input)
                 }
