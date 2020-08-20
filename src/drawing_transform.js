@@ -39,17 +39,27 @@ class DrawingTransform {
     this.initHandles()
   }
 
+  start (e) {
+    if (e.altKey) { this.copy = this.makeACopy() }
+    if (this.options.start !== undefined && this.options.start !== null) { this.options.start(e) }
+  }
+
+  end () {
+    this.init()
+    if (this.copy !== null && this.copy !== undefined) {
+      if (this.options.new !== undefined && this.options.new !== null) { this.options.new(this.copy) }
+      this.copy = null
+    }
+    if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
+  }
+
   initDrag () {
     this.drag = new Drag(this.element, {
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept()
       },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      },
+      end: () => { this.end() },
       container: this.svg
     })
   }
@@ -77,17 +87,13 @@ class DrawingTransform {
     this.svg.insertBefore(handle, this.element)
     var positionHandle = new Handle(handle, {
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept(positionHandle)
       },
       move: () => {
         this.element.setAttribute('transform', positionHandle.element.getAttribute('transform'))
       },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      }
+      end: () => { this.end() }
     })
     this.handles.push(positionHandle)
 
@@ -116,15 +122,11 @@ class DrawingTransform {
       transformations: 'SR',
       pivot: handleCenter,
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept(rotateScaleHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      }
+      end: () => { this.end() }
     })
     this.handles.push(rotateScaleHandle)
 
@@ -148,16 +150,12 @@ class DrawingTransform {
       transformations: 'R',
       pivot: handleCenter,
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept(rotateHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
       cancel: () => { this.init() },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      }
+      end: () => { this.end() }
     })
     this.handles.push(rotateHandle)
 
@@ -181,15 +179,11 @@ class DrawingTransform {
       transformations: 'S',
       pivot: handleCenter,
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept(scaleHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      },
+      end: () => { this.end() },
       cancel: () => { this.init() }
     })
     this.handles.push(scaleHandle)
@@ -197,8 +191,8 @@ class DrawingTransform {
 
   makeACopy () {
     var copy = this.element.cloneNode(true)
-    if (this.options.new !== undefined && this.options.new !== null) { this.options.new(copy) }
     this.svg.insertBefore(copy, this.element)
+    return copy
   }
 
   destroy () {

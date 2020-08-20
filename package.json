@@ -1,12 +1,13 @@
 {
   "name": "@spoonconsulting/drawing",
-  "version": "0.2.0",
+  "version": "0.2.0-beta-copy4",
   "description": "Simple SVG drawing",
   "main": "dist/drawing.js",
   "module": "src/drawing.js",
   "scripts": {
     "build": "./node_modules/.bin/standard && ./node_modules/.bin/pug index.pug src && ./node_modules/.bin/webpack-cli",
     "start": "npm run build && ./node_modules/.bin/nf start",
+    "prepublish": "npm run build",
     "test": "npm run build"
   },
   "author": {
