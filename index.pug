@@ -19,17 +19,20 @@ html(lang='en')
           p -1
           //img(src="http://lorempixel.com/800/800?t=0")
         .viewer-container(style="background: rgba(0, 255, 0, 0.4);")
+          p 0
           //.svg-wrapper
-          .svg-container
-            svg viewport="0 0 10000 10000"
+          //.svg-container
+            svg(viewport="0 0 10000 10000")
           //img(src="./plan.svg")
           //img(src="http://lorempixel.com/400/200?t=0")
         .viewer-container(style="background: rgba(0, 0, 255, 0.4); display: none;")
           p 1
           //img(src="http://lorempixel.com/400/200?t=0")
-    .svg-container
-      svg
-    ul.svg-tools
+    .zoomable
+      .zoomable-element
+        .svg-container
+          svg(viewport="0 0 10000 10000")
+    //ul.svg-tools
       li.item.tool.selected(data-tool="path") Path
       li.item.tool(data-tool="arrow") Arrow
       li.item.tool(data-tool="double-arrow") Double arrow

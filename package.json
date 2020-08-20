@@ -5,8 +5,8 @@
   "main": "dist/drawing.js",
   "module": "src/drawing.js",
   "scripts": {
-    "build": "./node_modules/.bin/standard && ./node_modules/.bin/pug index.pug src && ./node_modules/.bin/webpack-cli",
-    "start": "npm run build && ./node_modules/.bin/nf start",
+    "build": "npx standard && npx pug index.pug src && npx webpack-cli",
+    "start": "npx nf start",
     "test": "npm run build"
   },
   "author": {

@@ -47,9 +47,15 @@ $(function () {
     if (action === 'delete') {
       drawing.delete()
     }
+  })// */
+
+  new Drawing.Zoomable({
+    element: document.getElementsByClassName('zoomable-element')[0],
+    container: document.getElementsByClassName('zoomable')[0],
   })
 
-  /* new Drawing.Viewer({
+
+  /*new Drawing.Viewer({
     elem: document.getElementsByClassName('viewer')[0],
     callback: (changes, positions) => {
       changes.forEach((change) => {
@@ -62,5 +68,5 @@ $(function () {
     destroyed: (e) => {
       $(e).remove()
     }
-  }) */
+  })*/
 })
