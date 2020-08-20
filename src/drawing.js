@@ -1,6 +1,5 @@
 import { Referentiel, MatrixUtils } from 'referentiel'
 import { Geometry } from './geometry'
-import { DownListener } from './drawing_listener.js'
 import { DrawingPathTool } from './drawing_path_tool.js'
 import { DrawingObjectTool } from './drawing_object_tool.js'
 import { DrawingTransform } from './drawing_transform.js'
@@ -30,7 +29,7 @@ class Drawing {
   }
 
   down (e) {
-    if(e.touches !== undefined && e.touches.length > 1) { return }
+    if (e.touches !== undefined && e.touches.length > 1) { return }
     e.preventDefault()
     e.stopPropagation()
     if (this._tool) {

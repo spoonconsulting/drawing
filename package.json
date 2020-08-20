@@ -6,6 +6,7 @@
   "module": "src/drawing.js",
   "scripts": {
     "build": "npx standard && npx pug index.pug src && npx webpack-cli",
+    "lint": "npx standard --fix",
     "start": "npx nf start",
     "test": "npm run build"
   },

@@ -49,13 +49,13 @@ $(function () {
     }
   })// */
 
-  new Drawing.Zoomable({
+  var zoomable = new window.Drawing.Zoomable({
     element: document.getElementsByClassName('zoomable-element')[0],
-    container: document.getElementsByClassName('zoomable')[0],
+    container: document.getElementsByClassName('zoomable')[0]
   })
+  console.log('Zoomable initialized', zoomable)
 
-
-  /*new Drawing.Viewer({
+  /* new Drawing.Viewer({
     elem: document.getElementsByClassName('viewer')[0],
     callback: (changes, positions) => {
       changes.forEach((change) => {
@@ -68,5 +68,5 @@ $(function () {
     destroyed: (e) => {
       $(e).remove()
     }
-  })*/
+  }) */
 })
