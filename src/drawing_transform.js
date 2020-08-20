@@ -47,7 +47,7 @@ class DrawingTransform {
 
   end () {
     this.init()
-    if(this.copy !== null) {
+    if (this.copy !== null) {
       if (this.options.new !== undefined && this.options.new !== null) { this.options.new(this.copy) }
       this.copy = null
     }
