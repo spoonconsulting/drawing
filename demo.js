@@ -23,7 +23,7 @@ $(function () {
   })
 
   drawing.setColor('#e83100')
-  drawing.addText('Super !', { withBackground: true })
+  drawing.addText('Super !', { background: true })
   // drawing.addText('Super !');
 
   $('body').on('click', '.svg-tools .item.tool', function () {
@@ -39,7 +39,7 @@ $(function () {
     var options = {}
     if (action === 'textWithBackground') {
       action = 'text'
-      options = { withBackground: true }
+      options = { background: true }
     }
     if (action === 'text') {
       drawing.addText(customPrompt('Enter some text:', ''), options)

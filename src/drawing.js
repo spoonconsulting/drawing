@@ -307,7 +307,7 @@ class Drawing {
     Utils.edit_text(text, input)
     Utils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotationMatrix()))
 
-    if (options.withBackground === true) {
+    if (options.background === true) {
       group.setAttribute('data-sharinpix-type', 'text-with-background')
       var rect = Utils.create_element(group, 'rect', {
         'stroke-width': 0,
