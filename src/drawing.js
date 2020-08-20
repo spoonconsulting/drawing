@@ -184,6 +184,9 @@ class Drawing {
         if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
         this.onChange()
       },
+      new: (new_element) => {
+        this._newCallback(new_element)
+      },
       click: () => {
         if (element.attributes['data-sharinpix-type'] == null) {
           return

@@ -196,8 +196,9 @@ class DrawingTransform {
   }
 
   makeACopy () {
-    this.svg.appendChild(this.element.cloneNode(true))
-    this.svg.appendChild(this.element)
+    var copy = this.element.cloneNode(true)
+    if (this.options.new !== undefined && this.options.new !== null) { this.options.new(copy) }
+    this.svg.insertBefore(copy, this.element)
   }
 
   destroy () {
