@@ -14,7 +14,6 @@ class DrawingTransform {
     }
     this.svg.appendChild(this.element)
     this.handles = []
-    this.copy = null
     this.init()
   }
 
@@ -47,7 +46,7 @@ class DrawingTransform {
 
   end () {
     this.init()
-    if (this.copy !== null) {
+    if (this.copy !== null && this.copy !== undefined) {
       if (this.options.new !== undefined && this.options.new !== null) { this.options.new(this.copy) }
       this.copy = null
     }
@@ -191,8 +190,9 @@ class DrawingTransform {
   }
 
   makeACopy () {
-    this.copy = this.element.cloneNode(true)
-    this.svg.insertBefore(this.copy, this.element)
+    var copy = this.element.cloneNode(true)
+    this.svg.insertBefore(copy, this.element)
+    return copy
   }
 
   destroy () {
