@@ -41,7 +41,8 @@ class DrawingTransform {
 
   initDrag () {
     this.drag = new Drag(this.element, {
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept()
       },
@@ -75,7 +76,8 @@ class DrawingTransform {
     Utils.apply_matrix(handle, this.referentiel.matrixTransform())
     this.svg.insertBefore(handle, this.element)
     var positionHandle = new Handle(handle, {
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(positionHandle)
       },
@@ -113,7 +115,8 @@ class DrawingTransform {
     var rotateScaleHandle = new Handle(handle, {
       transformations: 'SR',
       pivot: handleCenter,
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(rotateScaleHandle)
       },
@@ -144,7 +147,8 @@ class DrawingTransform {
     var rotateHandle = new Handle(handle, {
       transformations: 'R',
       pivot: handleCenter,
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(rotateHandle)
       },
@@ -176,7 +180,8 @@ class DrawingTransform {
     var scaleHandle = new Handle(handle, {
       transformations: 'S',
       pivot: handleCenter,
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(scaleHandle)
       },
@@ -188,6 +193,11 @@ class DrawingTransform {
       cancel: () => { this.init() }
     })
     this.handles.push(scaleHandle)
+  }
+
+  makeACopy () {
+    this.svg.appendChild(this.element.cloneNode(true))
+    this.svg.appendChild(this.element)
   }
 
   destroy () {

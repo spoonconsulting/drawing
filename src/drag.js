@@ -23,7 +23,7 @@ class Drag {
     this.referentiel = new Referentiel(this.element)
     this._moveListener = Utils.addEventListener(this.container, 'touchmove mousemove', (e) => { this.move(e) })
     this._upListener = Utils.addEventListener(this.container, 'touchend touchcancel mouseout mouseup', (e) => { this.up(e) })
-    if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+    if (this.options.start !== undefined && this.options.start !== null) { this.options.start(e) }
     window.requestAnimationFrame(() => { this.tick() })
   }
 
