@@ -7,10 +7,10 @@ class Handle {
     this.destroyed = false
 
     var start = options.start || function () {}
-    options.start = () => {
+    options.start = (e) => {
       this.default_opacity = this.element.style.opacity
       this.element.style.opacity = 0
-      start()
+      start(e)
     }
     var end = options.end || function () {}
     options.end = () => {

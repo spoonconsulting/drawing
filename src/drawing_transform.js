@@ -41,7 +41,8 @@ class DrawingTransform {
 
   initDrag () {
     this.drag = new Drag(this.element, {
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept()
       },
@@ -75,7 +76,8 @@ class DrawingTransform {
     Utils.apply_matrix(handle, this.referentiel.matrixTransform())
     this.svg.insertBefore(handle, this.element)
     var positionHandle = new Handle(handle, {
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(positionHandle)
       },
@@ -113,7 +115,8 @@ class DrawingTransform {
     var rotateScaleHandle = new Handle(handle, {
       transformations: 'SR',
       pivot: handleCenter,
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(rotateScaleHandle)
       },
@@ -144,7 +147,8 @@ class DrawingTransform {
     var rotateHandle = new Handle(handle, {
       transformations: 'R',
       pivot: handleCenter,
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(rotateHandle)
       },
@@ -164,9 +168,9 @@ class DrawingTransform {
     })
     Utils.create_element(handle, 'path', {
       r: this.size / 2,
-      d: 'M448.1 344v112c0 13.3-10.7 24-24 24h-112c-21.4 0-32.1-25.9-17-41l36.2-36.2L224 295.6 116.8 402.9 153 439c15.1 15.1 4.4 41-17 41H24c-13.3 0-24-10.7-24-24V344c0-21.4 25.9-32.1 41-17l36.2 36.2L184.5 256 77.2 148.7 41 185c-15.1 15.1-41 4.4-41-17V56c0-13.3 10.7-24 24-24h112c21.4 0 32.1 25.9 17 41l-36.2 36.2L224 216.4l107.3-107.3L295.1 73c-15.1-15.1-4.4-41 17-41h112c13.3 0 24 10.7 24 24v112c0 21.4-25.9 32.1-41 17l-36.2-36.2L263.6 256l107.3 107.3 36.2-36.2c15.1-15.2 41-4.5 41 16.9z',
+      d: 'M377.941 169.941V216H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.568 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296h243.882v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.568 0-33.941l-86.059-86.059c-15.119-15.12-40.971-4.412-40.971 16.97z',
       fill: '#0070d2',
-      transform: 'scale(' + this.size / 1024 + ') translate(-225 -256)'
+      transform: 'rotate(-45) scale(' + this.size / 1024 + ') translate(-225 -256)'
     })
     handlePosition = MatrixUtils.multVector(
       (new Referentiel(this.element)).matrixTransform(),
@@ -176,7 +180,8 @@ class DrawingTransform {
     var scaleHandle = new Handle(handle, {
       transformations: 'S',
       pivot: handleCenter,
-      start: () => {
+      start: (e) => {
+        if (e.altKey) { this.makeACopy() }
         if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
         this.removeHandleExcept(scaleHandle)
       },
@@ -188,6 +193,11 @@ class DrawingTransform {
       cancel: () => { this.init() }
     })
     this.handles.push(scaleHandle)
+  }
+
+  makeACopy () {
+    this.svg.appendChild(this.element.cloneNode(true))
+    this.svg.appendChild(this.element)
   }
 
   destroy () {
