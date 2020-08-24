@@ -29,7 +29,7 @@ class DrawingTransform {
     this.last_init = Date.now()
     this.referentiel = new Referentiel(this.element)
     this.containerReferentiel = new Referentiel(this.svg)
-    this.size = Geometry.distance(this.containerReferentiel.globalToLocal([0, 0]), this.containerReferentiel.globalToLocal([20, 20]))
+    this.size = Geometry.distance(this.containerReferentiel.globalToLocal([0, 0]), this.containerReferentiel.globalToLocal([40, 40]))
     this.padding = this.size / 2
     this.bbox = this.element.getBBox()
     if (this.drag != null) {
