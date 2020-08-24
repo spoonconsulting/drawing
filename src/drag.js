@@ -16,6 +16,7 @@ class Drag {
     e.preventDefault()
     e.stopPropagation()
     if (this.dragging) { return }
+    this.startDrag = Date.now()
     this.dragging = true
     this.start = null
     this.lastMoveEvent = null
@@ -23,7 +24,7 @@ class Drag {
     this.referentiel = new Referentiel(this.element)
     this._moveListener = Utils.addEventListener(this.container, 'touchmove mousemove', (e) => { this.move(e) })
     this._upListener = Utils.addEventListener(this.container, 'touchend touchcancel mouseout mouseup', (e) => { this.up(e) })
-    if (this.options.start !== undefined && this.options.start !== null) { this.options.start(e) }
+    if (this.options.start) { this.options.start(e) }
     window.requestAnimationFrame(() => { this.tick() })
   }
 
@@ -48,7 +49,7 @@ class Drag {
         estimate = this.options.transformations || 'TSR'
         this.pivot = this.options.pivot
       } else {
-        if (this.pivot === undefined || this.pivot === null) {
+        if (!this.pivot) {
           var bbox = this.element.getBBox()
           this.pivot = MatrixUtils.multVector(
             (new Referentiel(this.element)).matrixTransform(),
@@ -63,7 +64,7 @@ class Drag {
       if (s > 0.1) {
         this.matrix = newMatrix
         Utils.apply_matrix(this.element, this.matrix)
-        if (this.options.move !== undefined && this.options.move !== null) { this.options.move(transformationMatrix) }
+        if (this.options.move) { this.options.move(transformationMatrix) }
       }
       this.start = touches
     }
@@ -80,7 +81,11 @@ class Drag {
     this.dragging = false
     this._moveListener()
     this._upListener()
-    if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
+    if (Date.now() - this.startDrag > 300) {
+      if (this.options.end) { this.options.end() }
+    } else {
+      if (this.options.cancel) { this.options.cancel() }
+    }
   }
 
   move (e) {
