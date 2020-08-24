@@ -223,7 +223,7 @@ class Drawing {
           default:
             if (this.options.promptText) {
               this.options.promptText(element.getAttribute('data-sharinpix-note-text') || '', function (input) {
-                if(input !== '') {
+                if (input !== '') {
                   element.setAttribute('data-sharinpix-note-text', input)
                 } else {
                   element.removeAttribute('data-sharinpix-note-text')
