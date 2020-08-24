@@ -32,7 +32,7 @@ class DrawingTransform {
     this.size = Geometry.distance(this.containerReferentiel.globalToLocal([0, 0]), this.containerReferentiel.globalToLocal([20, 20]))
     this.padding = this.size / 2
     this.bbox = this.element.getBBox()
-    if (this.drag != null) {
+    if (this.drag) {
       this.drag.destroy()
     }
     this.initDrag()
@@ -41,11 +41,11 @@ class DrawingTransform {
 
   start (e) {
     if (e.altKey) { this.copy = this.makeACopy() }
-    if (this.options.start !== undefined && this.options.start !== null) { this.options.start(e) }
+    if (this.options.start) { this.options.start(e) }
   }
 
   cancel () {
-    if(this.copy !== undefined && this.copy !== null) {
+    if(this.copy) {
       this.copy.remove()
       this.copy = null
     }
@@ -54,11 +54,11 @@ class DrawingTransform {
 
   end () {
     this.init()
-    if (this.copy !== null && this.copy !== undefined) {
-      if (this.options.new !== undefined && this.options.new !== null) { this.options.new(this.copy) }
+    if (this.copy) {
+      if (this.options.new) { this.options.new(this.copy) }
       this.copy = null
     }
-    if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
+    if (this.options.end) { this.options.end() }
   }
 
   initDrag () {

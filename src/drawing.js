@@ -27,7 +27,7 @@ class Drawing {
     this._down = new DownListener(this.svg, {
       down: (e) => {
         this.down(e)
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(false) }
+        if (this.options.showControls) { this.options.showControls(false) }
       }
     })
     return DrawingUtils.style(this.svg, 'cursor', 'crosshair')
@@ -68,12 +68,12 @@ class Drawing {
           end: (element) => {
             this._tool = null
             this._newCallback(element)
-            if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+            if (this.options.showControls) { this.options.showControls(true) }
           },
           cancel: () => {
             this._tool = null
             this.select(e.target)
-            if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+            if (this.options.showControls) { this.options.showControls(true) }
           }
         })
     }
@@ -88,12 +88,12 @@ class Drawing {
       end: (element) => {
         this._tool = null
         this._newCallback(element)
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+        if (this.options.showControls) { this.options.showControls(true) }
       },
       cancel: () => {
         this._tool = null
         this.select(e.target)
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+        if (this.options.showControls) { this.options.showControls(true) }
       }
     })
   }
@@ -162,13 +162,13 @@ class Drawing {
   }
 
   selectCallback () {
-    if (this.options.selected !== null && this.options.selected !== undefined) {
+    if (this.options.selected) {
       return this.options.selected(this.selected)
     }
   }
 
   _newCallback (element) {
-    if (this.options.new !== null && this.options.new !== undefined) {
+    if (this.options.new) {
       this.options.new(element)
     }
     this.onChange()
@@ -178,10 +178,10 @@ class Drawing {
     return new DrawingTransform(element, {
       handles: this.options.handles,
       start: () => {
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(false) }
+        if (this.options.showControls) { this.options.showControls(false) }
       },
       end: () => {
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+        if (this.options.showControls) { this.options.showControls(true) }
         this.onChange()
       },
       new: (newElement) => {
@@ -234,7 +234,7 @@ class Drawing {
   }
 
   onChange () {
-    if (this.options.onChange !== undefined && this.options.onChange !== null) {
+    if (this.options.onChange) {
       this.options.onChange()
     }
   }
