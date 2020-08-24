@@ -19,14 +19,14 @@ class DrawingTransform {
 
   init () {
     var time
-    if (this.last_init) {
-      time = Date.now() - this.last_init
+    if (this.lastInit) {
+      time = Date.now() - this.lastInit
       if (time < 500 && this.options.click) {
         this.options.click()
         return
       }
     }
-    this.last_init = Date.now()
+    this.lastInit = Date.now()
     this.referentiel = new Referentiel(this.element)
     this.containerReferentiel = new Referentiel(this.svg)
     this.size = Geometry.distance(this.containerReferentiel.globalToLocal([0, 0]), this.containerReferentiel.globalToLocal([20, 20]))
@@ -49,6 +49,7 @@ class DrawingTransform {
       this.copy.remove()
       this.copy = null
     }
+    if (this.options.end) { this.options.end() }
     this.init()
   }
 
