@@ -45,7 +45,7 @@ class DrawingTransform {
   }
 
   cancel () {
-    if(this.copy) {
+    if (this.copy) {
       this.copy.remove()
       this.copy = null
     }

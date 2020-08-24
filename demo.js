@@ -1,7 +1,7 @@
 var $ = window.$
 var customPrompt = function (title, placeholder) {
   var input = window.prompt(title, placeholder)
-  if(input === null) { return null }
+  if (input === null) { return null }
 
   return input.replace('\n', '\n')
 }
