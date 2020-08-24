@@ -16,6 +16,7 @@ class Drag {
     e.preventDefault()
     e.stopPropagation()
     if (this.dragging) { return }
+    this.startDrag = Date.now()
     this.dragging = true
     this.start = null
     this.lastMoveEvent = null
@@ -80,7 +81,11 @@ class Drag {
     this.dragging = false
     this._moveListener()
     this._upListener()
-    if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
+    if (Date.now() - this.startDrag > 300) {
+      if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
+    } else {
+      if (this.options.cancel !== undefined && this.options.cancel !== null) { this.options.cancel() }
+    }
   }
 
   move (e) {

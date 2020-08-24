@@ -44,6 +44,14 @@ class DrawingTransform {
     if (this.options.start !== undefined && this.options.start !== null) { this.options.start(e) }
   }
 
+  cancel () {
+    if(this.copy !== undefined && this.copy !== null) {
+      this.copy.remove()
+      this.copy = null
+    }
+    this.init()
+  }
+
   end () {
     this.init()
     if (this.copy !== null && this.copy !== undefined) {
@@ -59,6 +67,7 @@ class DrawingTransform {
         this.start(e)
         this.removeHandleExcept()
       },
+      cancel: () => { this.cancel() },
       end: () => { this.end() },
       container: this.svg
     })
@@ -93,6 +102,7 @@ class DrawingTransform {
       move: () => {
         this.element.setAttribute('transform', positionHandle.element.getAttribute('transform'))
       },
+      cancel: () => { this.cancel() },
       end: () => { this.end() }
     })
     this.handles.push(positionHandle)
@@ -154,7 +164,7 @@ class DrawingTransform {
         this.removeHandleExcept(rotateHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      cancel: () => { this.init() },
+      cancel: () => { this.cancel() },
       end: () => { this.end() }
     })
     this.handles.push(rotateHandle)
@@ -184,7 +194,7 @@ class DrawingTransform {
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
       end: () => { this.end() },
-      cancel: () => { this.init() }
+      cancel: () => { this.cancel() }
     })
     this.handles.push(scaleHandle)
   }
