@@ -42,7 +42,7 @@ var DrawingUtils = {
     return element
   },
   edit_text: function (element, input) {
-    if (input === null || input === '') { return }
+    if (input === undefined || input === null || input === '') { return }
     var bbox, child, i, j, len, len1, line, ref, ref1, results
     element.innerHTML = ''
     ref = input.split('\n')

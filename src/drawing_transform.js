@@ -49,8 +49,8 @@ class DrawingTransform {
       this.copy.remove()
       this.copy = null
     }
-    if (this.options.end) { this.options.end() }
     this.init()
+    if (this.options.end) { this.options.end() }
   }
 
   end () {
