@@ -1,0 +1,21 @@
+{
+  "name": "Heroku app",
+  "description": "",
+  "website": "",
+  "success_url": "/",
+  "addons": [
+  ],
+  "env": {
+    "NPM_CONFIG_PRODUCTION": "false"
+  },
+  "buildpacks": [
+    { "url": "https://github.com/heroku/heroku-buildpack-nodejs" }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "image": "heroku/nodejs"
+}

@@ -1,6 +1,9 @@
 var $ = window.$
 var customPrompt = function (title, placeholder) {
-  return window.prompt(title, placeholder).replace('\n', '\n')
+  var input = window.prompt(title, placeholder)
+  if (input === null) { return null }
+
+  return input.replace('\n', '\n')
 }
 $(function () {
   var drawing = new window.Drawing.Drawing(document.querySelector('svg'), {
@@ -12,6 +15,9 @@ $(function () {
     },
     onChange: function () {
       console.log('Annotation changed !')
+      drawing.export({}, (svg) => {
+        console.log('new SVG', svg)
+      })
     },
     showControls: function (controls) {
       if (controls) {
