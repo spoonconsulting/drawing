@@ -15,7 +15,7 @@ $(function () {
     },
     onChange: function () {
       console.log('Annotation changed !')
-      drawing.export({}, (svg)=>  {
+      drawing.export({}, (svg) => {
         console.log('new SVG', svg)
       })
     },
