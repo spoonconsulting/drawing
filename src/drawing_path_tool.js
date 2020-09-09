@@ -12,12 +12,12 @@ class DrawingPathTool {
 
     var pointers = {}
     this._pointerUpListener = Utils.addEventListener(this.element, 'pointerup', (e) => {
-      delete pointers[e.pointerId];
+      delete pointers[e.pointerId]
     })
     this._pointerMoveListener = Utils.addEventListener(this.element, 'pointermove', (e) => {
-      pointers[e.pointerId] = e;
-      if(Object.keys(pointers).length == 1) {
-        e.stopPropagation();
+      pointers[e.pointerId] = e
+      if (Object.keys(pointers).length === 1) {
+        e.stopPropagation()
         e.preventDefault()
       }
     })

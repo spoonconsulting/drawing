@@ -93,7 +93,6 @@ class Drag {
   }
 
   move (e) {
-    e._stopped = true;
     e.preventDefault()
     e.stopPropagation()
     this.lastMoveEvent = e
