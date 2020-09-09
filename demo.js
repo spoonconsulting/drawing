@@ -56,7 +56,7 @@ $(function () {
     }
   })
 
-  drawing.setColor('#e83100')
+  drawing.setColor('#f0ec00')
   drawing.addText('Super !', { background: true })
   // drawing.addText('Super !');
 
