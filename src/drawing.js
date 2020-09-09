@@ -24,7 +24,10 @@ class Drawing {
   }
 
   _init () {
-    this._downListener = Utils.addEventListener(this.svg, 'touchstart mousedown', (e) => { this.down(e) })
+    this._downListener = Utils.addEventListener(this.svg, 'touchstart mousedown', (e) => {
+      this.down(e)
+      if (this.options.showControls) { this.options.showControls(false) }
+    })
     return Utils.style(this.svg, 'cursor', 'crosshair')
   }
 
@@ -61,12 +64,12 @@ class Drawing {
           end: (element) => {
             this._tool = null
             this._newCallback(element)
-            if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+            if (this.options.showControls) { this.options.showControls(true) }
           },
           cancel: () => {
             this._tool = null
             this.select(e.target)
-            if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+            if (this.options.showControls) { this.options.showControls(true) }
           }
         })
     }
@@ -82,12 +85,12 @@ class Drawing {
       end: (element) => {
         this._tool = null
         this._newCallback(element)
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+        if (this.options.showControls) { this.options.showControls(true) }
       },
       cancel: () => {
         this._tool = null
         this.select(e.target)
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+        if (this.options.showControls) { this.options.showControls(true) }
       }
     })
   }
@@ -157,13 +160,13 @@ class Drawing {
   }
 
   selectCallback () {
-    if (this.options.selected !== null && this.options.selected !== undefined) {
+    if (this.options.selected) {
       return this.options.selected(this.selected)
     }
   }
 
   _newCallback (element) {
-    if (this.options.new !== null && this.options.new !== undefined) {
+    if (this.options.new) {
       this.options.new(element)
     }
     this.onChange()
@@ -173,11 +176,14 @@ class Drawing {
     return new DrawingTransform(element, {
       handles: this.options.handles,
       start: () => {
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(false) }
+        if (this.options.showControls) { this.options.showControls(false) }
       },
       end: () => {
-        if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(true) }
+        if (this.options.showControls) { this.options.showControls(true) }
         this.onChange()
+      },
+      new: (newElement) => {
+        this._newCallback(newElement)
       },
       click: () => {
         if (element.attributes['data-sharinpix-type'] == null) {
@@ -212,11 +218,13 @@ class Drawing {
               })
             }
             break
-          case 'note':
+          default:
             if (this.options.promptText) {
-              this.options.promptText(element.getAttribute('data-sharinpix-note-text'), function (input) {
+              this.options.promptText(element.getAttribute('data-sharinpix-note-text') || '', function (input) {
                 if (input !== '') {
-                  return element.setAttribute('data-sharinpix-note-text', input)
+                  element.setAttribute('data-sharinpix-note-text', input)
+                } else {
+                  element.removeAttribute('data-sharinpix-note-text')
                 }
               })
             }
@@ -226,7 +234,7 @@ class Drawing {
   }
 
   onChange () {
-    if (this.options.onChange !== undefined && this.options.onChange !== null) {
+    if (this.options.onChange) {
       this.options.onChange()
     }
   }
@@ -393,7 +401,7 @@ class Drawing {
     if (this._transform) {
       this._transform.destroy()
     }
-    this._downListene()
+    this._downListener()
   }
 };
 

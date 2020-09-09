@@ -1,9 +1,43 @@
 var $ = window.$
 var customPrompt = function (title, placeholder) {
-  return window.prompt(title, placeholder).replace('\n', '\n')
+  var input = window.prompt(title, placeholder)
+  if (input === null) { return null }
+
+  return input.replace('\n', '\n')
 }
 $(function () {
-  var drawing = new window.Drawing.Drawing(document.querySelector('svg'), {
+  var map = L.map($('.map')[0], { crs: L.CRS.Simple, center: [500, 500], zoom: 0, minZoom: -5});
+  console.log('map', map)
+  var bounds = [[0, 0], [1000, 1000]]
+  L.imageOverlay('https://leafletjs.com/examples/crs-simple/uqm_map_full.png', bounds, {zIndex: 0}).addTo(map);
+
+  // layer = L.gridLayer({bounds: bounds, tileSize: L.point(1000, 1000), zIndex: 0, maxNativeZoom: 0, minNativeZoom: 0, minZoom: -40, maxZoom: 5})
+  //
+  // layer.createTile = function(coords) {
+  //    var tile = document.createElement('img');
+  //    tile.src = 'https://leafletjs.com/examples/crs-simple/uqm_map_full.png'
+  //    return tile;
+  // }
+  // layer.addTo(map)
+
+  $svg = $('<svg xmlns="http://www.w3.org/2000/svg" \
+    xmlns:xlink="http://www.w3.org/1999/xlink" \
+    version="1.1" \
+    xml:space="preserve"></svg>')
+  $svg.attr('viewBox', "0 0 1000 1000")
+
+  // layer = L.gridLayer({bounds: bounds, interactive: true, tileSize: L.point(1000, 1000), zIndex: 1, maxNativeZoom: 0, minNativeZoom: 0, minZoom: -40, maxZoom: 5})
+
+  var elem = document.createElement('div');
+  elem.addEventListener('touchmove', function() {
+    console.log('MOVE !!');
+  })
+
+  elem.appendChild($svg[0])
+  layer = L.svgOverlay(elem, bounds , { interactive: true, bubblingMouseEvents: false, zIndex: 1})
+  layer.addTo(map)
+
+  var drawing = new window.Drawing.Drawing($svg[0], {
     promptText: function (placeholder, callback) {
       callback(customPrompt('Enter some text:', placeholder))
     },
@@ -12,6 +46,9 @@ $(function () {
     },
     onChange: function () {
       console.log('Annotation changed !')
+      drawing.export({}, (svg) => {
+        console.log('new SVG', svg)
+      })
     },
     showControls: function (controls) {
       if (controls) {
@@ -49,11 +86,14 @@ $(function () {
     }
   })// */
 
-  var zoomable = new window.Drawing.Zoomable({
-    element: document.getElementsByClassName('zoomable-element')[0],
-    container: document.getElementsByClassName('zoomable')[0]
-  })
-  console.log('Zoomable initialized', zoomable)
+
+  // var zoomable = new window.Drawing.Zoomable({
+  //   element: document.getElementsByClassName('zoomable-element')[0],
+  //   container: document.getElementsByClassName('zoomable')[0]
+  // })
+
+
+  //console.log('Zoomable initialized', zoomable)
 
   /* new Drawing.Viewer({
     elem: document.getElementsByClassName('viewer')[0],

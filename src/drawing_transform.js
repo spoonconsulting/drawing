@@ -19,37 +19,57 @@ class DrawingTransform {
 
   init () {
     var time
-    if (this.last_init) {
-      time = Date.now() - this.last_init
+    if (this.lastInit) {
+      time = Date.now() - this.lastInit
       if (time < 500 && this.options.click) {
         this.options.click()
         return
       }
     }
-    this.last_init = Date.now()
+    this.lastInit = Date.now()
     this.referentiel = new Referentiel(this.element)
     this.containerReferentiel = new Referentiel(this.svg)
     this.size = Geometry.distance(this.containerReferentiel.globalToLocal([0, 0]), this.containerReferentiel.globalToLocal([20, 20]))
     this.padding = this.size / 2
     this.bbox = this.element.getBBox()
-    if (this.drag != null) {
+    if (this.drag) {
       this.drag.destroy()
     }
     this.initDrag()
     this.initHandles()
   }
 
+  start (e) {
+    if (e.altKey) { this.copy = this.makeACopy() }
+    if (this.options.start) { this.options.start(e) }
+  }
+
+  cancel () {
+    if (this.copy) {
+      this.copy.remove()
+      this.copy = null
+    }
+    this.init()
+    if (this.options.end) { this.options.end() }
+  }
+
+  end () {
+    this.init()
+    if (this.copy) {
+      if (this.options.new) { this.options.new(this.copy) }
+      this.copy = null
+    }
+    if (this.options.end) { this.options.end() }
+  }
+
   initDrag () {
     this.drag = new Drag(this.element, {
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept()
       },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      },
+      cancel: () => { this.cancel() },
+      end: () => { this.end() },
       container: this.svg
     })
   }
@@ -77,17 +97,14 @@ class DrawingTransform {
     this.svg.insertBefore(handle, this.element)
     var positionHandle = new Handle(handle, {
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept(positionHandle)
       },
       move: () => {
         this.element.setAttribute('transform', positionHandle.element.getAttribute('transform'))
       },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      }
+      cancel: () => { this.cancel() },
+      end: () => { this.end() }
     })
     this.handles.push(positionHandle)
 
@@ -116,15 +133,11 @@ class DrawingTransform {
       transformations: 'SR',
       pivot: handleCenter,
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept(rotateScaleHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      }
+      end: () => { this.end() }
     })
     this.handles.push(rotateScaleHandle)
 
@@ -148,16 +161,12 @@ class DrawingTransform {
       transformations: 'R',
       pivot: handleCenter,
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept(rotateHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      cancel: () => { this.init() },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      }
+      cancel: () => { this.cancel() },
+      end: () => { this.end() }
     })
     this.handles.push(rotateHandle)
 
@@ -181,23 +190,20 @@ class DrawingTransform {
       transformations: 'S',
       pivot: handleCenter,
       start: (e) => {
-        if (e.altKey) { this.makeACopy() }
-        if (this.options.start !== undefined && this.options.start !== null) { this.options.start() }
+        this.start(e)
         this.removeHandleExcept(scaleHandle)
       },
       move: (matrix) => { Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform())) },
-      end: () => {
-        this.init()
-        if (this.options.end !== undefined && this.options.end !== null) { this.options.end() }
-      },
-      cancel: () => { this.init() }
+      end: () => { this.end() },
+      cancel: () => { this.cancel() }
     })
     this.handles.push(scaleHandle)
   }
 
   makeACopy () {
-    this.svg.appendChild(this.element.cloneNode(true))
-    this.svg.appendChild(this.element)
+    var copy = this.element.cloneNode(true)
+    this.svg.insertBefore(copy, this.element)
+    return copy
   }
 
   destroy () {

@@ -24,17 +24,22 @@
 }
 
 .svg-tools {
-  position: fixed;
+  background: rgba(255, 255, 255, 0.7);
+  position: absolute;
   bottom: 0;
-  display: flex;
-  align-items: center;
-  margin: 8px 0 0 ;
-  padding: 0;
-  list-style: none;
+  right: 0;
+  left: 0;
+  margin: 8px 0 0;
+  padding: 4px;
+  z-index: 1;
+  overflow: scroll-y;
 }
 
 .svg-tools .item {
+  display: block;
+  float: left;
   border: 1px solid #000;
+  margin: 4px;
   padding: 4px;
   margin-right: 4px;
   cursor: pointer;
@@ -88,3 +93,12 @@
 /*   transform: scale(0.01); */
 /*   transform-origin: 0 0; */
 /* } */
+.map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: pink;
+  z-index: 0;
+}

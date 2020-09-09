@@ -7,11 +7,14 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     script(type='text/javascript', src='../dist/drawing.js')
     script(type='text/javascript', src='node_modules/jquery/dist/jquery.js')
+    script(type='text/javascript', src='node_modules/leaflet/dist/leaflet.js')
     script(type='text/javascript', src='demo.js')
+    link(rel="stylesheet" media="all" href="../node_modules/leaflet/dist/leaflet.css")
     link(rel="stylesheet" media="all" href="../node_modules/reset-css/reset.css")
     link(rel="stylesheet" media="all" href="./demo.css")
     link(rel="stylesheet" media="all" href="./viewer.css")
   body
+    .map
     //.viewer
       .viewer-background
       .viewer-content
@@ -28,11 +31,12 @@ html(lang='en')
         .viewer-container(style="background: rgba(0, 0, 255, 0.4); display: none;")
           p 1
           //img(src="http://lorempixel.com/400/200?t=0")
-    .zoomable
+    //.zoomable
       .zoomable-element
         .svg-container
           svg(viewport="0 0 10000 10000")
-    //ul.svg-tools
+    ul.svg-tools
+      li.item.tool.selected(data-tool="hand") Hand
       li.item.tool.selected(data-tool="path") Path
       li.item.tool(data-tool="arrow") Arrow
       li.item.tool(data-tool="double-arrow") Double arrow

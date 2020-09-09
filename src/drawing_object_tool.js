@@ -1,5 +1,5 @@
 import { MoveListener, UpListener } from './drawing_listener.js'
-import { DrawingUtils } from './drawing_utils.js'
+import { DrawingUtils as Utils } from './drawing_utils.js'
 
 class DrawingObjectTool {
   constructor (element, options) {
@@ -18,10 +18,23 @@ class DrawingObjectTool {
         return this.move(touches)
       }
     })
-    this.group = DrawingUtils.create_element(this.element, 'g', {
+
+    var pointers = {}
+    this._pointerUpListener = Utils.addEventListener(this.element, 'pointerup', (e) => {
+      delete pointers[e.pointerId];
+    })
+    this._pointerMoveListener = Utils.addEventListener(this.element, 'pointermove', (e) => {
+      pointers[e.pointerId] = e;
+      if(Object.keys(pointers).length == 1) {
+        e.stopPropagation();
+        e.preventDefault()
+      }
+    })
+
+    this.group = Utils.create_element(this.element, 'g', {
       'data-sharinpix-type': this.options.objectClass.type
     })
-    this.size = DrawingUtils.size(this.element) * 0.01
+    this.size = Utils.size(this.element) * 0.01
     ObjectClass = this.options.objectClass
     this.object = new ObjectClass({
       parent: this.group,
@@ -43,7 +56,7 @@ class DrawingObjectTool {
       })
     } else {
       this.options.cancel()
-      DrawingUtils.remove(this.group)
+      Utils.remove(this.group)
     }
     return this.destroy()
   }
@@ -76,6 +89,8 @@ class DrawingObjectTool {
     }
     this.destroyed = true
     this._up_listener.destroy()
+    this._pointerMoveListener()
+    this._pointerUpListener()
     return this._move_listener.destroy()
   }
 }

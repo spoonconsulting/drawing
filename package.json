@@ -1,6 +1,6 @@
 {
   "name": "@spoonconsulting/drawing",
-  "version": "0.2.0",
+  "version": "0.4.0-alpha-0",
   "description": "Simple SVG drawing",
   "main": "dist/drawing.js",
   "module": "src/drawing.js",
@@ -8,6 +8,7 @@
     "build": "npx standard && npx pug index.pug src && npx webpack-cli",
     "lint": "npx standard --fix",
     "start": "npx nf start",
+    "prepublish": "npm run build",
     "test": "npm run build"
   },
   "author": {
@@ -27,6 +28,7 @@
     "foreman": "^3.0.1",
     "http-server": "^0.12.3",
     "jquery": "^3.5.1",
+    "leaflet": "^1.7.1",
     "pug-cli": "^1.0.0-alpha6",
     "raw-loader": "^4.0.1",
     "reset-css": "^5.0.1",

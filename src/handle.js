@@ -17,6 +17,11 @@ class Handle {
       this.element.style.opacity = this.default_opacity
       end()
     }
+    var cancel = options.cancel || function () {}
+    options.cancel = () => {
+      this.element.style.opacity = this.default_opacity
+      cancel()
+    }
     this.drag = new Drag(this.element, options)
   }
 
