@@ -12,7 +12,6 @@ import { DrawingRect } from './drawing_rect.js'
 import { DrawingCircle } from './drawing_circle.js'
 import { DrawingNote } from './drawing_note.js'
 import { Hand as HandTool } from './tools/hand.js'
-import { Zoomable } from './zoomable.js'
 
 class Drawing {
   constructor (svg, options = {}) {
@@ -415,4 +414,4 @@ class Drawing {
   }
 };
 
-export { Referentiel, Drawing, MatrixUtils, Geometry, Zoomable }
+export { Referentiel, Drawing, MatrixUtils, Geometry }
