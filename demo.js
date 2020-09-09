@@ -7,9 +7,9 @@ var customPrompt = function (title, placeholder) {
   return input.replace('\n', '\n')
 }
 $(function () {
-  var map = L.map($('.map')[0], { crs: L.CRS.Simple, center: [500, 500], zoom: 0, minZoom: -5});
+  var map = L.map($('.map')[0], { crs: L.CRS.Simple, center: [500, 500], zoom: 2, minZoom: -5 })
   var bounds = [[0, 0], [1000, 1000]]
-  L.imageOverlay('https://leafletjs.com/examples/crs-simple/uqm_map_full.png', bounds, {zIndex: 0}).addTo(map);
+  L.imageOverlay('https://leafletjs.com/examples/crs-simple/uqm_map_full.png', bounds, { zIndex: 0 }).addTo(map)
 
   // layer = L.gridLayer({bounds: bounds, tileSize: L.point(1000, 1000), zIndex: 0, maxNativeZoom: 0, minNativeZoom: 0, minZoom: -40, maxZoom: 5})
   //
@@ -20,18 +20,18 @@ $(function () {
   // }
   // layer.addTo(map)
 
-  $svg = $('<svg xmlns="http://www.w3.org/2000/svg" \
-    xmlns:xlink="http://www.w3.org/1999/xlink" \
-    version="1.1" \
-    xml:space="preserve"></svg>')
-  $svg.attr('viewBox', "0 0 1000 1000")
+  var $svg = $('<svg xmlns="http://www.w3.org/2000/svg" ' +
+    'xmlns:xlink="http://www.w3.org/1999/xlink" ' +
+    'version="1.1" ' +
+    'xml:space="preserve"></svg>')
+  $svg.attr('viewBox', '0 0 1000 1000')
 
   // layer = L.gridLayer({bounds: bounds, interactive: true, tileSize: L.point(1000, 1000), zIndex: 1, maxNativeZoom: 0, minNativeZoom: 0, minZoom: -40, maxZoom: 5})
 
-  var elem = document.createElement('div');
+  var elem = document.createElement('div')
 
   elem.appendChild($svg[0])
-  layer = L.svgOverlay(elem, bounds , { interactive: true, bubblingMouseEvents: false, zIndex: 1})
+  var layer = L.svgOverlay(elem, bounds, { interactive: true, bubblingMouseEvents: false, zIndex: 1 })
   layer.addTo(map)
 
   var drawing = new window.Drawing.Drawing($svg[0], {
@@ -83,14 +83,12 @@ $(function () {
     }
   })// */
 
-
   // var zoomable = new window.Drawing.Zoomable({
   //   element: document.getElementsByClassName('zoomable-element')[0],
   //   container: document.getElementsByClassName('zoomable')[0]
   // })
 
-
-  //console.log('Zoomable initialized', zoomable)
+  // console.log('Zoomable initialized', zoomable)
 
   /* new Drawing.Viewer({
     elem: document.getElementsByClassName('viewer')[0],

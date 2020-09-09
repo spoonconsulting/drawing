@@ -11,16 +11,16 @@ import { DrawingLine } from './drawing_line.js'
 import { DrawingRect } from './drawing_rect.js'
 import { DrawingCircle } from './drawing_circle.js'
 import { DrawingNote } from './drawing_note.js'
+import { Hand as HandTool } from './tools/hand.js'
 import { Zoomable } from './zoomable.js'
 
 class Drawing {
-  constructor (svg1, options1 = {}) {
-    var base, base1
-    this.svg = svg1
-    this.options = options1
-    this._init();
-    (base = this.options).color || (base.color = '#FF0000');
-    (base1 = this.options).tool || (base1.tool = 'path')
+  constructor (svg, options = {}) {
+    this.svg = svg
+    this.options = options
+    this.options.color = this.options.color || '#ff0000'
+    this.options.tool = this.options.tool || 'hand'
+    this._init()
   }
 
   _init () {
@@ -28,7 +28,7 @@ class Drawing {
       this.down(e)
       if (this.options.showControls) { this.options.showControls(false) }
     })
-    return Utils.style(this.svg, 'cursor', 'crosshair')
+    this.setTool(this.options.tool)
   }
 
   down (e) {
@@ -57,7 +57,7 @@ class Drawing {
       case 'note':
         this._drawingObject(DrawingNote, e)
         break
-      default:
+      case 'path':
         this._tool = new DrawingPathTool(this.svg, {
           color: this.options.color,
           size: this.options.size,
@@ -69,6 +69,15 @@ class Drawing {
           cancel: () => {
             this._tool = null
             this.select(e.target)
+            if (this.options.showControls) { this.options.showControls(true) }
+          }
+        })
+        break
+      default:
+        this._tool = new HandTool(this.svg, {
+          end: () => {
+            this._tool = null
+            console.log('END !!')
             if (this.options.showControls) { this.options.showControls(true) }
           }
         })
@@ -245,6 +254,7 @@ class Drawing {
 
   setTool (tool) {
     this.options.tool = tool
+    Utils.style(this.svg, 'cursor', this.options.tool === 'hand' ? 'grab' : 'crosshair')
   }
 
   setColor (color) {
