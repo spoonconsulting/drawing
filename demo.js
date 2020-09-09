@@ -7,7 +7,7 @@ var customPrompt = function (title, placeholder) {
   return input.replace('\n', '\n')
 }
 $(function () {
-  var map = Lwindow..map($('.map')[0], { crs: L.CRS.Simple, center: [500, 500], zoom: 0, minZoom: -5});
+  var map = L.map($('.map')[0], { crs: L.CRS.Simple, center: [500, 500], zoom: 0, minZoom: -5});
   var bounds = [[0, 0], [1000, 1000]]
   L.imageOverlay('https://leafletjs.com/examples/crs-simple/uqm_map_full.png', bounds, {zIndex: 0}).addTo(map);
 
