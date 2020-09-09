@@ -15,7 +15,6 @@ class DrawingPathTool {
       delete pointers[e.pointerId];
     })
     this._pointerMoveListener = Utils.addEventListener(this.element, 'pointermove', (e) => {
-      console.log(Object.keys(pointers).length)
       pointers[e.pointerId] = e;
       if(Object.keys(pointers).length == 1) {
         e.stopPropagation();

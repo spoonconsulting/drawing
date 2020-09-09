@@ -7,7 +7,6 @@ var customPrompt = function (title, placeholder) {
 }
 $(function () {
   var map = L.map($('.map')[0], { crs: L.CRS.Simple, center: [500, 500], zoom: 0, minZoom: -5});
-  console.log('map', map)
   var bounds = [[0, 0], [1000, 1000]]
   L.imageOverlay('https://leafletjs.com/examples/crs-simple/uqm_map_full.png', bounds, {zIndex: 0}).addTo(map);
 
@@ -29,9 +28,6 @@ $(function () {
   // layer = L.gridLayer({bounds: bounds, interactive: true, tileSize: L.point(1000, 1000), zIndex: 1, maxNativeZoom: 0, minNativeZoom: 0, minZoom: -40, maxZoom: 5})
 
   var elem = document.createElement('div');
-  elem.addEventListener('touchmove', function() {
-    console.log('MOVE !!');
-  })
 
   elem.appendChild($svg[0])
   layer = L.svgOverlay(elem, bounds , { interactive: true, bubblingMouseEvents: false, zIndex: 1})

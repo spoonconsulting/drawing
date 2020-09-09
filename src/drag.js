@@ -8,7 +8,7 @@ class Drag {
     this.options = options
     this.dragging = false
     this.container = options.container || element.parentNode
-    this._downListener = Utils.addEventListener(this.element, 'touchstart mousedown pointerdown', (e) => { this.down(e) })
+    this._downListener = Utils.addEventListener(this.element, 'touchstart mousedown', (e) => { this.down(e) })
     Utils.style(this.element, 'cursor', 'move')
   }
 
@@ -23,11 +23,11 @@ class Drag {
     this.lastEstimate = null
     this.referentiel = new Referentiel(this.element)
     this._moveListener = Utils.addEventListener(this.container, 'touchmove mousemove', (e) => { this.move(e) })
-    this._upListener = Utils.addEventListener(this.container, 'touchend touchcancel mouseout mouseup', (e) => { this.up(e) })
-    this._pointerListener = Utils.addEventListener(this.container, 'pointermove', (e) => {
-      e.stopPropagation();
+    this._pointerMoveListener = Utils.addEventListener(this.container, 'pointermove', (e) => {
       e.preventDefault()
+      e.stopPropagation()
     })
+    this._upListener = Utils.addEventListener(this.container, 'touchend touchcancel mouseout mouseup', (e) => { this.up(e) })
     if (this.options.start) { this.options.start(e) }
     window.requestAnimationFrame(() => { this.tick() })
   }
@@ -93,7 +93,6 @@ class Drag {
   }
 
   move (e) {
-    console.log('Drawing MOVE !!ss?', e)
     e._stopped = true;
     e.preventDefault()
     e.stopPropagation()
@@ -105,6 +104,7 @@ class Drag {
     if (this._upListener) { this._upListener() }
     if (this._moveListener) { this._moveListener() }
     if (this._pointerListener) { this._pointerListener() }
+    if (this._pointerMoveListener) { this._pointerMoveListener() }
     Utils.style(this.element, 'cursor', 'auto')
   }
 };
