@@ -253,7 +253,7 @@ class Drawing {
 
   setTool (tool) {
     this.options.tool = tool
-    Utils.style(this.svg, 'cursor', this.options.tool === 'hand' ? 'grab' : 'crosshair')
+    Utils.style(this.svg, 'cursor', this.options.tool === 'hand' ? '' : 'crosshair')
   }
 
   setColor (color) {
