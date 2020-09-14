@@ -5,7 +5,7 @@
   "main": "dist/drawing.js",
   "module": "src/drawing.js",
   "scripts": {
-    "build": "npx standard && npx pug index.pug src && npx webpack-cli",
+    "build": "npx standard && npx pug index.pug src npx node-sass ./demo.sass && npx webpack-cli",
     "lint": "npx standard --fix",
     "start": "npx nf start",
     "prepublish": "npm run build",
@@ -29,6 +29,7 @@
     "http-server": "^0.12.3",
     "jquery": "^3.5.1",
     "leaflet": "^1.7.1",
+    "node-sass": "^4.14.1",
     "pug-cli": "^1.0.0-alpha6",
     "raw-loader": "^4.0.1",
     "reset-css": "^5.0.1",

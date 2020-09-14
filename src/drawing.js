@@ -12,13 +12,14 @@ import { DrawingRect } from './drawing_rect.js'
 import { DrawingCircle } from './drawing_circle.js'
 import { DrawingNote } from './drawing_note.js'
 import { Hand as HandTool } from './tools/hand.js'
+import { Menu } from './menu.js'
 
 class Drawing {
   constructor (svg, options = {}) {
     this.svg = svg
     this.options = options
-    this.options.color = this.options.color || '#ff0000'
-    this.options.tool = this.options.tool || 'hand'
+    this.color = this.options.color || '#ff0000'
+    this.tool = this.options.tool || 'hand'
     this._init()
   }
 
@@ -27,7 +28,7 @@ class Drawing {
       this.down(e)
       if (this.options.showControls) { this.options.showControls(false) }
     })
-    this.setTool(this.options.tool)
+    this.setTool(this.tool)
   }
 
   down (e) {
@@ -37,7 +38,7 @@ class Drawing {
     if (this._tool) {
       return
     }
-    switch (this.options.tool) {
+    switch (this.tool) {
       case 'arrow':
         this._drawingObject(DrawingArrow, e)
         break
@@ -58,7 +59,7 @@ class Drawing {
         break
       case 'path':
         this._tool = new DrawingPathTool(this.svg, {
-          color: this.options.color,
+          color: this.color,
           size: this.options.size,
           end: (element) => {
             this._tool = null
@@ -86,7 +87,7 @@ class Drawing {
 
   _drawingObject (objectClass, e) {
     this._tool = new DrawingObjectTool(this.svg, {
-      color: this.options.color,
+      color: this.color,
       size: this.options.size,
       promptText: this.options.promptText,
       objectClass: objectClass,
@@ -252,13 +253,13 @@ class Drawing {
   }
 
   setTool (tool) {
-    this.options.tool = tool
-    Utils.style(this.svg, 'cursor', this.options.tool === 'hand' ? '' : 'crosshair')
+    this.tool = tool
+    Utils.style(this.svg, 'cursor', this.tool === 'hand' ? '' : 'crosshair')
   }
 
   setColor (color) {
     var element
-    this.options.color = color
+    this.color = color
     if (this.selected == null) {
       return
     }
@@ -272,8 +273,8 @@ class Drawing {
       var rectElement = this.selected.querySelector('rect')
       Utils.style(rectElement, 'fill', color)
       var textElement = this.selected.querySelector('text')
-      Utils.style(textElement, 'fill', Utils.contrastColor(this.options.color))
-      Utils.style(textElement, 'stroke', Utils.contrastColor(this.options.color))
+      Utils.style(textElement, 'fill', Utils.contrastColor(this.color))
+      Utils.style(textElement, 'stroke', Utils.contrastColor(this.color))
     }
     this.onChange()
   }
@@ -327,16 +328,16 @@ class Drawing {
       group.setAttribute('data-sharinpix-type', 'text-with-background')
       var rect = Utils.create_element(group, 'rect', {
         'stroke-width': 0,
-        fill: this.options.color
+        fill: this.color
       })
       group.insertBefore(rect, text)
-      Utils.style(group, 'fill', Utils.contrastColor(this.options.color))
-      Utils.style(group, 'stroke', Utils.contrastColor(this.options.color))
+      Utils.style(group, 'fill', Utils.contrastColor(this.color))
+      Utils.style(group, 'stroke', Utils.contrastColor(this.color))
       this.setTextBackgroundSize(group)
     } else {
       group.setAttribute('data-sharinpix-type', 'text')
-      Utils.style(group, 'fill', this.options.color)
-      Utils.style(group, 'stroke', this.options.color)
+      Utils.style(group, 'fill', this.color)
+      Utils.style(group, 'stroke', this.color)
     }
     this._newCallback(group)
     return this.select(text)
@@ -414,4 +415,4 @@ class Drawing {
   }
 };
 
-export { Referentiel, Drawing, MatrixUtils, Geometry }
+export { Referentiel, Drawing, MatrixUtils, Geometry, Menu }
