@@ -101,6 +101,8 @@
   background-color: rgba(255, 255, 255, 0.8); }
   .drawing-menu .drawing-selected {
     display: inline-block; }
+  .drawing-menu .drawing-colors, .drawing-menu .drawing-tools {
+    display: none; }
   .drawing-menu.open .drawing-colors, .drawing-menu.open .drawing-tools {
     display: block; }
   .drawing-menu.open .drawing-selected {
