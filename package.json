@@ -5,7 +5,7 @@
   "main": "dist/drawing.js",
   "module": "src/drawing.js",
   "scripts": {
-    "build": "npx standard && npx pug index.pug src npx node-sass ./demo.sass && npx webpack-cli",
+    "build": "npx standard && npx pug index.pug src && npx node-sass ./demo.sass -o ./ && npx webpack-cli",
     "lint": "npx standard --fix",
     "start": "npx nf start",
     "prepublish": "npm run build",
