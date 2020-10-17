@@ -56,8 +56,8 @@ $(function () {
     }
   })
 
-  console.log('Drawing', window.Drawing)
   var menu = new window.Drawing.Menu(drawing)
+  console.log('menu', menu)
 
   drawing.setColor('#f0ec00')
   drawing.addText('Super !', { background: true })
