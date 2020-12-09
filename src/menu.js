@@ -134,7 +134,7 @@ class Menu {
     return div
   }
 
-  destroy() {
+  destroy () {
     Style.unuse()
     this.menu.remove()
   }
