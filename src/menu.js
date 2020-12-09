@@ -1,4 +1,6 @@
 import { DrawingUtils as Utils } from './drawing_utils.js'
+import './menu.sass'
+
 const DEFAULT_COLORS = {
   red: '#e74c3c',
   orange: '#f39c12',

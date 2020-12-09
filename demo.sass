@@ -101,38 +101,3 @@
   bottom: 0
   background: pink
   z-index: 0
-
-.drawing-menu
-  position: fixed
-  z-index: 100
-  bottom: 0px
-  left: 0px
-  margin: 10px
-  border-radius: 35px
-  padding: 5px
-  max-width: 500px
-  background-color: rgba(255, 255, 255, 0.8)
-  .drawing-selected
-    display: inline-block
-  .drawing-colors, .drawing-tools
-    display: none
-  &.open
-    .drawing-colors, .drawing-tools
-      display: block
-    .drawing-selected
-      display: none
-  > div > a
-    display: inline-block
-    margin: 1px
-    width: 40px
-    height: 40px
-    border-radius: 20px
-    background-color: rgba(0, 0, 0, 0.8)
-    color: rgb(180, 180, 180)
-    line-height: 40px
-    text-align: center
-    &>svg
-      width: 20px
-      height: 20px
-      display: inline-block
-      vertical-align: middle
