@@ -7,11 +7,14 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     script(type='text/javascript', src='../dist/drawing.js')
     script(type='text/javascript', src='node_modules/jquery/dist/jquery.js')
+    script(type='text/javascript', src='node_modules/leaflet/dist/leaflet.js')
     script(type='text/javascript', src='demo.js')
+    link(rel="stylesheet" media="all" href="../node_modules/leaflet/dist/leaflet.css")
     link(rel="stylesheet" media="all" href="../node_modules/reset-css/reset.css")
     link(rel="stylesheet" media="all" href="./demo.css")
     link(rel="stylesheet" media="all" href="./viewer.css")
   body
+    .map
     //.viewer
       .viewer-background
       .viewer-content
@@ -19,18 +22,44 @@ html(lang='en')
           p -1
           //img(src="http://lorempixel.com/800/800?t=0")
         .viewer-container(style="background: rgba(0, 255, 0, 0.4);")
+          p 0
           //.svg-wrapper
-          .svg-container
-            svg viewport="0 0 10000 10000"
+          //.svg-container
+            svg(viewport="0 0 10000 10000")
           //img(src="./plan.svg")
           //img(src="http://lorempixel.com/400/200?t=0")
         .viewer-container(style="background: rgba(0, 0, 255, 0.4); display: none;")
           p 1
           //img(src="http://lorempixel.com/400/200?t=0")
-    .svg-container
-      svg
-    ul.svg-tools
-      li.item.tool.selected(data-tool="path") Path
+    //.zoomable
+      .zoomable-element
+        .svg-container
+          svg(viewport="0 0 10000 10000")
+    //.drawing-menu
+      .drawing-menu-colors
+        a(href="" style="background-color: #e83100;")
+        a(href="" style="background-color: #00bae8;")
+        a(href="" style="background-color: #f0ec00;")
+        a(href="" style="background-color: #00e862;")
+        a(href="" style="background-color: #00bae8;")
+        a(href="" style="background-color: #00bae8;")
+        a(href="" style="background-color: #f0ec00;")
+        a(href="" style="background-color: #00e862;")
+        a(href="" style="background-color: #f0ec00;")
+        a(href="" style="background-color: #00e862;")
+      .drawing-menu-selected
+        a(href="")
+          svg(aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512")
+            path(fill="currentColor" d="")
+      .drawing-menu-tools
+        a(href="")
+          svg(aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512")
+            path(fill="currentColor" d="M384 352c-.35 0-.67.1-1.02.1l-39.2-65.32c5.07-9.17 8.22-19.56 8.22-30.78s-3.14-21.61-8.22-30.78l39.2-65.32c.35.01.67.1 1.02.1 35.35 0 64-28.65 64-64s-28.65-64-64-64c-23.63 0-44.04 12.95-55.12 32H119.12C108.04 44.95 87.63 32 64 32 28.65 32 0 60.65 0 96c0 23.63 12.95 44.04 32 55.12v209.75C12.95 371.96 0 392.37 0 416c0 35.35 28.65 64 64 64 23.63 0 44.04-12.95 55.12-32h209.75c11.09 19.05 31.49 32 55.12 32 35.35 0 64-28.65 64-64 .01-35.35-28.64-64-63.99-64zm-288 8.88V151.12A63.825 63.825 0 0 0 119.12 128h208.36l-38.46 64.1c-.35-.01-.67-.1-1.02-.1-35.35 0-64 28.65-64 64s28.65 64 64 64c.35 0 .67-.1 1.02-.1l38.46 64.1H119.12A63.748 63.748 0 0 0 96 360.88zM272 256c0-8.82 7.18-16 16-16s16 7.18 16 16-7.18 16-16 16-16-7.18-16-16zM400 96c0 8.82-7.18 16-16 16s-16-7.18-16-16 7.18-16 16-16 16 7.18 16 16zM64 80c8.82 0 16 7.18 16 16s-7.18 16-16 16-16-7.18-16-16 7.18-16 16-16zM48 416c0-8.82 7.18-16 16-16s16 7.18 16 16-7.18 16-16 16-16-7.18-16-16zm336 16c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z")
+
+
+    //ul.svg-tools
+      li.item.tool.selected(data-tool="hand") Hand
+      li.item.tool(data-tool="path") Path
       li.item.tool(data-tool="arrow") Arrow
       li.item.tool(data-tool="double-arrow") Double arrow
       li.item.tool(data-tool="line") Line
@@ -40,9 +69,5 @@ html(lang='en')
       li.item.action(data-action="text") Text
       li.item.action(data-action="textWithBackground") Text with background
       li.separator
-      li.item.color(style="background-color: #e83100;" data-color="#e83100")
-      li.item.color(style="background-color: #00bae8;" data-color="#00bae8")
-      li.item.color(style="background-color: #f0ec00;" data-color="#f0ec00")
-      li.item.color(style="background-color: #00e862;" data-color="#00e862")
       li.separator
       li.item.action(data-action="delete") Delete

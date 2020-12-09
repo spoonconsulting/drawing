@@ -9,6 +9,18 @@ class DrawingPathTool {
     this.destroyed = false
     this._moveListener = Utils.addEventListener(this.element, 'touchmove mousemove', (e) => { this.move(e) })
     this._upListener = Utils.addEventListener(this.element, 'touchend touchcancel mouseout mouseup', (e) => { this.up(e) })
+
+    var pointers = {}
+    this._pointerUpListener = Utils.addEventListener(this.element, 'pointerup', (e) => {
+      delete pointers[e.pointerId]
+    })
+    this._pointerMoveListener = Utils.addEventListener(this.element, 'pointermove', (e) => {
+      pointers[e.pointerId] = e
+      if (Object.keys(pointers).length === 1) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
+    })
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
     this.group = document.createElementNS('http://www.w3.org/2000/svg', 'g')
     this.group.setAttribute('data-sharinpix-type', 'path')
@@ -109,6 +121,8 @@ class DrawingPathTool {
     if (this.destroyed) { return }
     this._upListener()
     this._moveListener()
+    this._pointerMoveListener()
+    this._pointerUpListener()
     this.destroyed = true
   }
 }
