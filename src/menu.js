@@ -1,5 +1,5 @@
 import { DrawingUtils as Utils } from './drawing_utils.js'
-import './menu.sass'
+import Style from './menu.sass'
 
 const DEFAULT_COLORS = {
   red: '#e74c3c',
@@ -25,6 +25,7 @@ const DEFAULT_ICONS = {
 
 class Menu {
   constructor (drawing, options = {}) {
+    Style.use()
     this.drawing = drawing
     this.options = options
     this.tools = this.options.tools || DEFAULT_TOOLS
@@ -131,6 +132,11 @@ class Menu {
       parentElement.appendChild(div)
     }
     return div
+  }
+
+  destroy() {
+    Style.unuse()
+    this.menu.remove()
   }
 }
 

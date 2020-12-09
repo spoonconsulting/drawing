@@ -21,7 +21,7 @@ module.exports = {
       {
         test: /\.sass$/,
         use: [
-          'style-loader',
+          { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } } ,
           'css-loader',
           'sass-loader'
         ]
