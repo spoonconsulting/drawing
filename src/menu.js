@@ -52,24 +52,20 @@ class Menu {
   }
 
   toggle () {
-    console.log('toggle')
     this.menu.classList.toggle('open')
   }
 
   close () {
-    console.log('close')
     this.menu.classList.remove('open')
   }
 
   open () {
-    console.log('open')
     this.menu.classList.add('open')
   }
 
   click (e) {
     e.preventDefault()
     e.stopPropagation()
-    console.log(e, e.originalTarget)
     var elem = e.target
     while (elem.tagName !== 'A') {
       elem = elem.parentElement
@@ -90,7 +86,6 @@ class Menu {
         break
     }
     this.toggle()
-    console.log('ICIC', elem.classList[0])
   }
 
   createColorsMenu (menu) {

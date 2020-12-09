@@ -90,7 +90,6 @@ class DrawingPathTool {
     if (this.lastEvent !== null) {
       if (this._points.length === 0) {
         this.referentiel = new Referentiel(this.element)
-        console.log('REFERENTIEL', this.referentiel)
         this.size = Utils.size(this.element) * 0.01
         switch (this.options.size) {
           case 'small':

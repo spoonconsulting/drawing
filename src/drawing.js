@@ -77,7 +77,6 @@ class Drawing {
         this._tool = new HandTool(this.svg, {
           end: () => {
             this._tool = null
-            console.log('END !!')
             if (this.options.showControls) { this.options.showControls(true) }
           }
         })
