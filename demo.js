@@ -56,7 +56,10 @@ $(function () {
     }
   })
 
-  var menu = new window.Drawing.Menu(drawing)
+  drawing.setTool('path')
+  var menu = new window.Drawing.Menu(drawing, {
+    tools: ['path', 'arrow', 'double-arrow', 'line', 'circle', 'rect', 'note']
+  })
   console.log('menu', menu)
 
   drawing.setColor('#f0ec00')
