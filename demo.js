@@ -60,7 +60,7 @@ $(function () {
   var menu = new window.Drawing.Menu(drawing, {
     tools: ['path', 'arrow', 'double-arrow', 'line', 'circle', 'rect', 'note']
   })
-  console.log('menu', menu)
+  menu.delete()
 
   drawing.setColor('#f0ec00')
   drawing.addText('Super !', { background: true })
