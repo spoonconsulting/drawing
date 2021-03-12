@@ -314,7 +314,7 @@ class Drawing {
       'font-family': 'sans-serif'
     })
     DrawingUtils.edit_text(text, input)
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotationMatrix()))
+    DrawingUtils.apply_matrix(group, MatrixUtils.mult(referentiel.matrix(), [[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]]))
 
     if (options.background === true) {
       group.setAttribute('data-sharinpix-type', 'text-with-background')
