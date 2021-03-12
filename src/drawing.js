@@ -295,14 +295,6 @@ class Drawing {
     }
   }
 
-  rotationMatrix () {
-    var angle, matrix, referentiel
-    referentiel = new Referentiel(this.svg)
-    matrix = referentiel.matrix()
-    angle = -Math.atan2(-matrix[0][1], matrix[1][1])
-    return [[Math.cos(angle), -Math.sin(angle), 0], [Math.sin(angle), Math.cos(angle), 0], [0, 0, 1]]
-  }
-
   addText (input, options = {}) {
     var size = Math.round(DrawingUtils.size(this.svg) * 0.05)
     var referentiel = new Referentiel(this.svg)
@@ -390,7 +382,7 @@ class Drawing {
     referentiel = new Referentiel(this.svg)
     center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
     scale = (DrawingUtils.size(this.svg) / 8) / width
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[scale, 0, center[0]], [0, scale, center[1]], [0, 0, 1]], this.rotationMatrix(), [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]))
+    DrawingUtils.apply_matrix(group, MatrixUtils.mult(referentiel.matrix(), [[scale, 0, center[0] - width / 2], [0, scale, center[1] - height / 2], [0, 0, 1]]))
     this._newCallback(group)
     return this.select(group)
   }
