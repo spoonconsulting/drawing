@@ -306,7 +306,7 @@ class Drawing {
       'font-family': 'sans-serif'
     })
     DrawingUtils.edit_text(text, input)
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult(referentiel.matrix(), [[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]]))
+    DrawingUtils.apply_matrix(group, MatrixUtils.mult(referentiel.matrixInv(), [[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]]))
 
     if (options.background === true) {
       group.setAttribute('data-sharinpix-type', 'text-with-background')
@@ -382,7 +382,7 @@ class Drawing {
     referentiel = new Referentiel(this.svg)
     center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
     scale = (DrawingUtils.size(this.svg) / 8) / width
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult(referentiel.matrix(), [[scale, 0, center[0] - width / 2], [0, scale, center[1] - height / 2], [0, 0, 1]]))
+    DrawingUtils.apply_matrix(group, MatrixUtils.mult(referentiel.matrixInv(), [[scale, 0, center[0] - width / 2], [0, scale, center[1] - height / 2], [0, 0, 1]]))
     this._newCallback(group)
     return this.select(group)
   }
