@@ -300,7 +300,7 @@ class Drawing {
     var group = DrawingUtils.create_element(this.svg, 'g')
     var text = DrawingUtils.create_element(group, 'text', {
       'stroke-width': 0,
-      'font-size': Math.round(Geometry.distance([window.innerWidth, window.innerHeight], [0,0]) * 0.025),
+      'font-size': Math.round(Geometry.distance([window.innerWidth, 0], [0, 0]) * 0.05),
       'font-family': 'sans-serif'
     })
     DrawingUtils.edit_text(text, input)
@@ -366,7 +366,7 @@ class Drawing {
   }
 
   addImage (dataUrl, options) {
-    var center, dataImg, group, height, image, referentiel, scale, width
+    var dataImg, group, height, image, referentiel, scale, width
     dataImg = new window.Image()
     dataImg.src = image
     width = options.width || 100
@@ -385,7 +385,7 @@ class Drawing {
     image.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', dataUrl)
     referentiel = new Referentiel(this.svg)
     center = [window.innerWidth / 2, window.innerHeight / 2]
-    scale = (Geometry.distance([window.innerWidth, 0], [0,0]) / 4) / width
+    scale = (Geometry.distance([window.innerWidth, 0], [0, 0]) / 4) / width
     DrawingUtils.apply_matrix(
       group,
       MatrixUtils.mult(
