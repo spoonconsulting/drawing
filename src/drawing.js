@@ -296,17 +296,21 @@ class Drawing {
   }
 
   addText (input, options = {}) {
-    var size = Math.round(DrawingUtils.size(this.svg) * 0.05)
     var referentiel = new Referentiel(this.svg)
-    var center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
     var group = DrawingUtils.create_element(this.svg, 'g')
     var text = DrawingUtils.create_element(group, 'text', {
       'stroke-width': 0,
-      'font-size': size,
+      'font-size': Math.round(Geometry.distance([window.innerWidth, window.innerHeight], [0,0]) * 0.025),
       'font-family': 'sans-serif'
     })
     DrawingUtils.edit_text(text, input)
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult(referentiel.matrixInv(), [[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]]))
+    DrawingUtils.apply_matrix(
+      group,
+      MatrixUtils.mult(
+        referentiel.matrixInv(),
+        [[1, 0, window.innerWidth / 2], [0, 1, window.innerHeight / 2], [0, 0, 1]]
+      )
+    )
 
     if (options.background === true) {
       group.setAttribute('data-sharinpix-type', 'text-with-background')
@@ -380,9 +384,17 @@ class Drawing {
     })
     image.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', dataUrl)
     referentiel = new Referentiel(this.svg)
-    center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
-    scale = (DrawingUtils.size(this.svg) / 8) / width
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult(referentiel.matrixInv(), [[scale, 0, center[0] - width / 2], [0, scale, center[1] - height / 2], [0, 0, 1]]))
+    center = [window.innerWidth / 2, window.innerHeight / 2]
+    scale = (Geometry.distance([window.innerWidth, 0], [0,0]) / 4) / width
+    DrawingUtils.apply_matrix(
+      group,
+      MatrixUtils.mult(
+        referentiel.matrixInv(),
+        [[1, 0, window.innerWidth / 2], [0, 1, window.innerHeight / 2], [0, 0, 1]],
+        [[scale, 0, 0], [0, scale, 0], [0, 0, 1]],
+        [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]
+      )
+    )
     this._newCallback(group)
     return this.select(group)
   }
