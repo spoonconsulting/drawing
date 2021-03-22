@@ -308,7 +308,7 @@ class Drawing {
     var group = Utils.create_element(this.svg, 'g')
     var text = Utils.create_element(group, 'text', {
       'stroke-width': 0,
-      'font-size': Math.round(Geometry.distance([window.innerWidth, 0], [0, 0]) * 0.05),
+      'font-size': Math.round(Geometry.distance([window.innerWidth, 0], [0, 0]) * 0.025),
       'font-family': 'sans-serif'
     })
     Utils.edit_text(text, input)
