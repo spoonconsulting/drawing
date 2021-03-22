@@ -1,5 +1,4 @@
 var $ = window.$
-var L = window.L
 var customPrompt = function (title, placeholder) {
   var input = window.prompt(title, placeholder)
   if (input === null) { return null }
