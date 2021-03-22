@@ -1,48 +1,44 @@
 import { Referentiel, MatrixUtils } from 'referentiel'
 import { Geometry } from './geometry'
-import { DownListener } from './drawing_listener.js'
 import { DrawingPathTool } from './drawing_path_tool.js'
 import { DrawingObjectTool } from './drawing_object_tool.js'
 import { DrawingTransform } from './drawing_transform.js'
 import { DrawingSelect } from './drawing_select.js'
-import { DrawingUtils } from './drawing_utils.js'
+import { DrawingUtils as Utils } from './drawing_utils.js'
 import { DrawingArrow } from './drawing_arrow.js'
 import { DrawingDoubleArrow } from './drawing_double_arrow.js'
 import { DrawingLine } from './drawing_line.js'
 import { DrawingRect } from './drawing_rect.js'
 import { DrawingCircle } from './drawing_circle.js'
 import { DrawingNote } from './drawing_note.js'
+import { Hand as HandTool } from './tools/hand.js'
+import { Menu } from './menu.js'
 
 class Drawing {
-  constructor (svg1, options1 = {}) {
-    var base, base1
-    this.svg = svg1
-    this.options = options1
-    this._init();
-    (base = this.options).color || (base.color = '#FF0000');
-    (base1 = this.options).tool || (base1.tool = 'path')
+  constructor (svg, options = {}) {
+    this.svg = svg
+    this.options = options
+    this.color = this.options.color || '#ff0000'
+    this.tool = this.options.tool || 'hand'
+    this._init()
   }
 
   _init () {
-    this._down = new DownListener(this.svg, {
-      down: (e) => {
-        this.down(e)
-        if (this.options.showControls) { this.options.showControls(false) }
-      }
+    this._downListener = Utils.addEventListener(this.svg, 'touchstart mousedown', (e) => {
+      this.down(e)
+      if (this.options.showControls) { this.options.showControls(false) }
     })
-    return DrawingUtils.style(this.svg, 'cursor', 'crosshair')
+    this.setTool(this.tool)
   }
 
   down (e) {
+    if (e.touches !== undefined && e.touches.length > 1) { return }
     e.preventDefault()
     e.stopPropagation()
     if (this._tool) {
       return
     }
-    if (this.selected != null) {
-      this.select(null)
-    }
-    switch (this.options.tool) {
+    switch (this.tool) {
       case 'arrow':
         this._drawingObject(DrawingArrow, e)
         break
@@ -61,9 +57,9 @@ class Drawing {
       case 'note':
         this._drawingObject(DrawingNote, e)
         break
-      default:
+      case 'path':
         this._tool = new DrawingPathTool(this.svg, {
-          color: this.options.color,
+          color: this.color,
           size: this.options.size,
           end: (element) => {
             this._tool = null
@@ -76,12 +72,22 @@ class Drawing {
             if (this.options.showControls) { this.options.showControls(true) }
           }
         })
+        break
+      default:
+        this._tool = new HandTool(this.svg, {
+          end: () => {
+            this._tool = null
+            console.log('END !!')
+            if (this.options.showControls) { this.options.showControls(true) }
+          }
+        })
     }
+    if (this.options.showControls !== undefined && this.options.showControls !== null) { this.options.showControls(false) }
   }
 
   _drawingObject (objectClass, e) {
     this._tool = new DrawingObjectTool(this.svg, {
-      color: this.options.color,
+      color: this.color,
       size: this.options.size,
       promptText: this.options.promptText,
       objectClass: objectClass,
@@ -109,6 +115,7 @@ class Drawing {
       return false
     }
     if (element === this.svg) {
+      this.select(null)
       return false
     }
     if (element.parentNode !== this.svg) {
@@ -212,7 +219,7 @@ class Drawing {
               }
               this.select(null)
               this.options.promptText(text, (input) => {
-                DrawingUtils.edit_text(textElement, input)
+                Utils.edit_text(textElement, input)
                 if (type === 'text-with-background') {
                   this.setTextBackgroundSize(element)
                 }
@@ -246,12 +253,13 @@ class Drawing {
   }
 
   setTool (tool) {
-    this.options.tool = tool
+    this.tool = tool
+    Utils.style(this.svg, 'cursor', this.tool === 'hand' ? '' : 'crosshair')
   }
 
   setColor (color) {
     var element
-    this.options.color = color
+    this.color = color
     if (this.selected == null) {
       return
     }
@@ -259,14 +267,14 @@ class Drawing {
     if (element == null) {
       return
     }
-    DrawingUtils.style(this.selected, 'fill', color)
-    DrawingUtils.style(this.selected, 'stroke', color)
+    Utils.style(this.selected, 'fill', color)
+    Utils.style(this.selected, 'stroke', color)
     if (this.selected.attributes['data-sharinpix-type'].value === 'text-with-background') {
       var rectElement = this.selected.querySelector('rect')
-      DrawingUtils.style(rectElement, 'fill', color)
+      Utils.style(rectElement, 'fill', color)
       var textElement = this.selected.querySelector('text')
-      DrawingUtils.style(textElement, 'fill', DrawingUtils.contrastColor(this.options.color))
-      DrawingUtils.style(textElement, 'stroke', DrawingUtils.contrastColor(this.options.color))
+      Utils.style(textElement, 'fill', Utils.contrastColor(this.color))
+      Utils.style(textElement, 'stroke', Utils.contrastColor(this.color))
     }
     this.onChange()
   }
@@ -304,32 +312,32 @@ class Drawing {
   }
 
   addText (input, options = {}) {
-    var size = Math.round(DrawingUtils.size(this.svg) * 0.05)
+    var size = Math.round(Utils.size(this.svg) * 0.05)
     var referentiel = new Referentiel(this.svg)
     var center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
-    var group = DrawingUtils.create_element(this.svg, 'g')
-    var text = DrawingUtils.create_element(group, 'text', {
+    var group = Utils.create_element(this.svg, 'g')
+    var text = Utils.create_element(group, 'text', {
       'stroke-width': 0,
       'font-size': size,
       'font-family': 'sans-serif'
     })
-    DrawingUtils.edit_text(text, input)
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotationMatrix()))
+    Utils.edit_text(text, input)
+    Utils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotationMatrix()))
 
     if (options.background === true) {
       group.setAttribute('data-sharinpix-type', 'text-with-background')
-      var rect = DrawingUtils.create_element(group, 'rect', {
+      var rect = Utils.create_element(group, 'rect', {
         'stroke-width': 0,
-        fill: this.options.color
+        fill: this.color
       })
       group.insertBefore(rect, text)
-      DrawingUtils.style(group, 'fill', DrawingUtils.contrastColor(this.options.color))
-      DrawingUtils.style(group, 'stroke', DrawingUtils.contrastColor(this.options.color))
+      Utils.style(group, 'fill', Utils.contrastColor(this.color))
+      Utils.style(group, 'stroke', Utils.contrastColor(this.color))
       this.setTextBackgroundSize(group)
     } else {
       group.setAttribute('data-sharinpix-type', 'text')
-      DrawingUtils.style(group, 'fill', this.options.color)
-      DrawingUtils.style(group, 'stroke', this.options.color)
+      Utils.style(group, 'fill', this.color)
+      Utils.style(group, 'stroke', this.color)
     }
     this._newCallback(group)
     return this.select(text)
@@ -339,10 +347,10 @@ class Drawing {
     var rectElement = element.querySelector('rect')
     var textElement = element.querySelector('text')
     var bbox = textElement.getBBox()
-    DrawingUtils.style(rectElement, 'x', bbox.x)
-    DrawingUtils.style(rectElement, 'y', bbox.y)
-    DrawingUtils.style(rectElement, 'width', bbox.width)
-    return DrawingUtils.style(rectElement, 'height', bbox.height)
+    Utils.style(rectElement, 'x', bbox.x)
+    Utils.style(rectElement, 'y', bbox.y)
+    Utils.style(rectElement, 'width', bbox.width)
+    return Utils.style(rectElement, 'height', bbox.height)
   }
 
   export (options, callback) {
@@ -375,12 +383,12 @@ class Drawing {
     dataImg.src = image
     width = options.width || 100
     height = options.height || 100
-    group = DrawingUtils.create_element(this.svg, 'g')
+    group = Utils.create_element(this.svg, 'g')
     group.setAttribute('data-sharinpix-type', 'sticker')
     if (options.id) {
       group.setAttribute('data-sharinpix-sticker-id', options.id)
     }
-    image = DrawingUtils.create_element(group, 'image', {
+    image = Utils.create_element(group, 'image', {
       x: '0',
       y: '0',
       width: width,
@@ -389,8 +397,8 @@ class Drawing {
     image.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', dataUrl)
     referentiel = new Referentiel(this.svg)
     center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
-    scale = (DrawingUtils.size(this.svg) / 8) / width
-    DrawingUtils.apply_matrix(group, MatrixUtils.mult([[scale, 0, center[0]], [0, scale, center[1]], [0, 0, 1]], this.rotationMatrix(), [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]))
+    scale = (Utils.size(this.svg) / 8) / width
+    Utils.apply_matrix(group, MatrixUtils.mult([[scale, 0, center[0]], [0, scale, center[1]], [0, 0, 1]], this.rotationMatrix(), [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]))
     this._newCallback(group)
     return this.select(group)
   }
@@ -399,12 +407,12 @@ class Drawing {
     if (this.selected) {
       this.select(null)
     }
-    DrawingUtils.style(this.svg, 'cursor', 'auto')
+    Utils.style(this.svg, 'cursor', 'auto')
     if (this._transform) {
       this._transform.destroy()
     }
-    return this._down.destroy()
+    this._downListener()
   }
 };
 
-export { Referentiel, Drawing, MatrixUtils, Geometry }
+export { Referentiel, Drawing, MatrixUtils, Geometry, Menu }

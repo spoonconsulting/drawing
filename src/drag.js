@@ -23,6 +23,10 @@ class Drag {
     this.lastEstimate = null
     this.referentiel = new Referentiel(this.element)
     this._moveListener = Utils.addEventListener(this.container, 'touchmove mousemove', (e) => { this.move(e) })
+    this._pointerMoveListener = Utils.addEventListener(this.container, 'pointermove', (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+    })
     this._upListener = Utils.addEventListener(this.container, 'touchend touchcancel mouseout mouseup', (e) => { this.up(e) })
     if (this.options.start) { this.options.start(e) }
     window.requestAnimationFrame(() => { this.tick() })
@@ -98,6 +102,8 @@ class Drag {
     if (this._downListener) { this._downListener() }
     if (this._upListener) { this._upListener() }
     if (this._moveListener) { this._moveListener() }
+    if (this._pointerListener) { this._pointerListener() }
+    if (this._pointerMoveListener) { this._pointerMoveListener() }
     Utils.style(this.element, 'cursor', 'auto')
   }
 };

@@ -19,6 +19,17 @@ module.exports = {
         }
       },
       {
+        test: /\.sass$/,
+        use: [
+          {
+            loader: 'style-loader',
+            options: { injectType: 'lazyStyleTag' }
+          },
+          'css-loader',
+          'sass-loader'
+        ]
+      },
+      {
         test: /\.js$/,
         use: {
           loader: 'babel-loader',
@@ -30,6 +41,6 @@ module.exports = {
         }
       }
     ]
-  }
-  // optimization: { minimize: false }
+  },
+  optimization: { minimize: false }
 }
