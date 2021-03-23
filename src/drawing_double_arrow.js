@@ -75,7 +75,15 @@ DrawingDoubleArrow = class DrawingDoubleArrow {
           DrawingUtils.style(text, 'stroke-width', '0')
           DrawingUtils.edit_text(text, input)
           angle = (this.angle() % Math.PI) - Math.PI / 2
-          return DrawingUtils.apply_matrix(textGroup, Geometry.multiply_matrix(Geometry.translation_matrix(center), Geometry.rotation_matrix(angle), Geometry.translation_matrix([0, -text.getBBox().height])))
+          return DrawingUtils.apply_matrix(
+            textGroup,
+            Geometry.multiply_matrix(
+              Geometry.translation_matrix(center),
+              Geometry.rotation_matrix(angle),
+              Geometry.translation_matrix([0, -text.getBBox().height]
+              )
+            )
+          )
         }
       })
       return callback()
