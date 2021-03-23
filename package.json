@@ -1,6 +1,6 @@
 {
   "name": "@spoonconsulting/drawing",
-  "version": "0.4.0-beta-2",
+  "version": "0.4.0-beta-3",
   "description": "Simple SVG drawing",
   "main": "dist/drawing.js",
   "module": "src/drawing.js",

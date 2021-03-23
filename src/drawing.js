@@ -2,7 +2,7 @@ import { Referentiel, MatrixUtils } from 'referentiel'
 import { Geometry } from './geometry'
 import { DrawingPathTool } from './drawing_path_tool.js'
 import { DrawingObjectTool } from './drawing_object_tool.js'
-import { DrawingTransform } from './drawing_transform.js'
+import { Transform } from './transform.js'
 import { DrawingSelect } from './drawing_select.js'
 import { DrawingUtils as Utils } from './drawing_utils.js'
 import { Arrow } from './arrow.js'
@@ -182,7 +182,7 @@ class Drawing {
   }
 
   transform (element) {
-    return new DrawingTransform(element, {
+    return new Transform(element, {
       handles: this.options.handles,
       start: () => {
         if (this.options.showControls) { this.options.showControls(false) }

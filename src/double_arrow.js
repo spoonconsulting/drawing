@@ -1,6 +1,6 @@
 import { DrawingUtils } from './drawing_utils.js'
 import { Geometry } from './geometry.js'
-import { Referentiel, MatrixUtils } from 'referentiel'
+import { Referentiel } from 'referentiel'
 
 class DoubleArrow {
   constructor (options) {
@@ -71,7 +71,6 @@ class DoubleArrow {
           var gto = referentiel.localToGlobal(this.to)
           var angle = Geometry.angle(gfrom, [gfrom[0], gfrom[0] + 100000], gto)
           angle = (angle % Math.PI) - Math.PI / 2
-
 
           return DrawingUtils.apply_matrix(
             textGroup,
