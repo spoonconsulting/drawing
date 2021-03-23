@@ -1,4 +1,5 @@
 import { DrawingUtils } from './drawing_utils.js'
+import { Referentiel, MatrixUtils } from 'referentiel'
 import { Geometry } from './geometry.js'
 
 class DrawingArrow {
@@ -73,7 +74,16 @@ class DrawingArrow {
             offsetY += Math.abs(offsetY) / offsetY * padding
           }
           center = [this.from[0] - offsetX, this.from[1] - offsetY]
-          return DrawingUtils.apply_matrix(this.text_group, Geometry.translation_matrix(center))
+
+          var referentiel = new Referentiel(this.options.parent.parentElement)
+          center = referentiel.localToGlobal(center)
+          return DrawingUtils.apply_matrix(
+            this.text_group,
+            MatrixUtils.mult(
+              referentiel.matrixInv(),
+              Geometry.translation_matrix(center),
+            )
+          )
         }
       })
     }
