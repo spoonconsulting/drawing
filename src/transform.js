@@ -95,7 +95,7 @@ class Transform {
 
     var handle = Utils.create_element(this.svg, 'path', {
       d: `M${x1[0]},${x1[1]} L${x2[0]},${x2[1]} L${x3[0]},${x3[1]} L${x4[0]},${x4[1]} L${x1[0]},${x1[1]}`,
-      style: 'stroke: #CCCCCC; stroke-linecap: square; stroke-width: 30;fill:#CCCCCC; opacity: 0.3;'
+      style: `stroke: #CCCCCC; stroke-linecap: square; stroke-width: ${this.size};fill:#CCCCCC; opacity: 0.3;`
     })
 
     this.svg.insertBefore(handle, this.element)
