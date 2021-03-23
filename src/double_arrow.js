@@ -1,15 +1,8 @@
+import { DrawingUtils } from './drawing_utils.js'
+import { Geometry } from './geometry.js'
+import { Referentiel, MatrixUtils } from 'referentiel'
 
-import {
-  DrawingUtils
-} from './drawing_utils.js'
-
-import {
-  Geometry
-} from './geometry.js'
-
-var DrawingDoubleArrow
-
-DrawingDoubleArrow = class DrawingDoubleArrow {
+class DoubleArrow {
   constructor (options) {
     var base
     this.options = options
@@ -64,24 +57,31 @@ DrawingDoubleArrow = class DrawingDoubleArrow {
   end (callback) {
     if (this.options.promptText != null) {
       this.options.promptText('', (input) => {
-        var angle, center, text, textGroup
         if (input !== '') {
-          center = Geometry.barycentre([this.from, this.to])
-          textGroup = DrawingUtils.create_element(this.options.parent, 'g')
-          text = DrawingUtils.create_element(textGroup, 'text', {
+          var textGroup = DrawingUtils.create_element(this.options.parent, 'g')
+          var text = DrawingUtils.create_element(textGroup, 'text', {
             'font-size': Math.round(DrawingUtils.size(this.options.parent) * 0.03),
             'font-family': 'sans-serif'
           })
           DrawingUtils.style(text, 'stroke-width', '0')
           DrawingUtils.edit_text(text, input)
-          angle = (this.angle() % Math.PI) - Math.PI / 2
+
+          var referentiel = new Referentiel(this.options.parent.parentElement)
+          var gfrom = referentiel.localToGlobal(this.from)
+          var gto = referentiel.localToGlobal(this.to)
+          var angle = Geometry.angle(gfrom, [gfrom[0], gfrom[0] + 100000], gto)
+          angle = (angle % Math.PI) - Math.PI / 2
+
+
           return DrawingUtils.apply_matrix(
             textGroup,
             Geometry.multiply_matrix(
-              Geometry.translation_matrix(center),
+              referentiel.matrixInv(),
+              Geometry.translation_matrix(
+                referentiel.localToGlobal(Geometry.barycentre([this.from, this.to]))
+              ),
               Geometry.rotation_matrix(angle),
-              Geometry.translation_matrix([0, -text.getBBox().height]
-              )
+              Geometry.translation_matrix([0, -text.getBBox().height])
             )
           )
         }
@@ -97,8 +97,6 @@ DrawingDoubleArrow = class DrawingDoubleArrow {
   }
 }
 
-DrawingDoubleArrow.type = 'double-arrow'
+DoubleArrow.type = 'double-arrow'
 
-export {
-  DrawingDoubleArrow
-}
+export { DoubleArrow }
