@@ -60,7 +60,7 @@ class DoubleArrow {
         if (input !== '') {
           var textGroup = DrawingUtils.create_element(this.options.parent, 'g')
           var text = DrawingUtils.create_element(textGroup, 'text', {
-            'font-size': Math.round(DrawingUtils.size(this.options.parent) * 0.03),
+            'font-size': 20,
             'font-family': 'sans-serif'
           })
           DrawingUtils.style(text, 'stroke-width', '0')
