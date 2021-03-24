@@ -303,26 +303,22 @@ class Drawing {
     }
   }
 
-  rotationMatrix () {
-    var angle, matrix, referentiel
-    referentiel = new Referentiel(this.svg)
-    matrix = referentiel.matrix()
-    angle = -Math.atan2(-matrix[0][1], matrix[1][1])
-    return [[Math.cos(angle), -Math.sin(angle), 0], [Math.sin(angle), Math.cos(angle), 0], [0, 0, 1]]
-  }
-
   addText (input, options = {}) {
-    var size = Math.round(Utils.size(this.svg) * 0.05)
     var referentiel = new Referentiel(this.svg)
-    var center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
     var group = Utils.create_element(this.svg, 'g')
     var text = Utils.create_element(group, 'text', {
       'stroke-width': 0,
-      'font-size': size,
+      'font-size': Math.round(Geometry.distance([window.innerWidth, 0], [0, 0]) * 0.025),
       'font-family': 'sans-serif'
     })
     Utils.edit_text(text, input)
-    Utils.apply_matrix(group, MatrixUtils.mult([[1, 0, center[0]], [0, 1, center[1]], [0, 0, 1]], this.rotationMatrix()))
+    Utils.apply_matrix(
+      group,
+      MatrixUtils.mult(
+        referentiel.matrixInv(),
+        [[1, 0, window.innerWidth / 2], [0, 1, window.innerHeight / 2], [0, 0, 1]]
+      )
+    )
 
     if (options.background === true) {
       group.setAttribute('data-sharinpix-type', 'text-with-background')
@@ -378,7 +374,7 @@ class Drawing {
   }
 
   addImage (dataUrl, options) {
-    var center, dataImg, group, height, image, referentiel, scale, width
+    var dataImg, group, height, image, referentiel, scale, width
     dataImg = new window.Image()
     dataImg.src = image
     width = options.width || 100
@@ -396,9 +392,16 @@ class Drawing {
     })
     image.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', dataUrl)
     referentiel = new Referentiel(this.svg)
-    center = referentiel.globalToLocal([window.innerWidth / 2, window.innerHeight / 2])
-    scale = (Utils.size(this.svg) / 8) / width
-    Utils.apply_matrix(group, MatrixUtils.mult([[scale, 0, center[0]], [0, scale, center[1]], [0, 0, 1]], this.rotationMatrix(), [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]))
+    scale = (Geometry.distance([window.innerWidth, 0], [0, 0]) / 4) / width
+    Utils.apply_matrix(
+      group,
+      MatrixUtils.mult(
+        referentiel.matrixInv(),
+        [[1, 0, window.innerWidth / 2], [0, 1, window.innerHeight / 2], [0, 0, 1]],
+        [[scale, 0, 0], [0, scale, 0], [0, 0, 1]],
+        [[1, 0, -width / 2], [0, 1, -height / 2], [0, 0, 1]]
+      )
+    )
     this._newCallback(group)
     return this.select(group)
   }
