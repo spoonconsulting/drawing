@@ -56,22 +56,22 @@ class Arrow {
           })
           DrawingUtils.style(this.text, 'stroke-width', '0')
           DrawingUtils.edit_text(this.text, input)
+          var referentiel = new Referentiel(this.options.parent.parentElement)
           var bbox = this.text.getBBox()
-          var padding = 10
-          var hyp = Math.sqrt(bbox.width * bbox.width + bbox.height * bbox.height) / 2
-          var offsetAngle = this.angle() + Math.PI / 2
+          var padding = 20
+          var gfrom = referentiel.localToGlobal(this.from)
+          var offsetAngle = Geometry.angle(gfrom, [gfrom[0], gfrom[0] + 100000], referentiel.localToGlobal(this.to))
           var offset = [
-            (padding + bbox.width / 2) * Math.cos(offsetAngle),
-            (padding + bbox.height / 2) * Math.sin(offsetAngle)
+            -(padding + bbox.width / 2) * Math.sin(offsetAngle),
+            (padding + bbox.height / 2) * Math.cos(offsetAngle)
           ]
 
-          var referentiel = new Referentiel(this.options.parent.parentElement)
           return DrawingUtils.apply_matrix(
             this.text_group,
             MatrixUtils.mult(
               referentiel.matrixInv(),
               Geometry.translation_matrix([-offset[0], -offset[1]]),
-              Geometry.translation_matrix(referentiel.localToGlobal([this.from[0] , this.from[1]]))
+              Geometry.translation_matrix(referentiel.localToGlobal(this.from))
             )
           )
         }
