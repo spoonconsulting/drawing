@@ -181,7 +181,6 @@ class Transform {
       pivot: handleCenter,
       start: (e) => {
         this.start(e)
-        console.log('rotateScaleHandle removeHandleExcept')
         this.removeHandleExcept(rotateScaleHandle)
       },
       move: (matrix) => {
