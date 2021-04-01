@@ -1,7 +1,8 @@
 import { DrawingUtils } from './drawing_utils.js'
+import { Referentiel, MatrixUtils } from 'referentiel'
 import { Geometry } from './geometry.js'
 
-class DrawingArrow {
+class Arrow {
   constructor (options) {
     var base, s
     this.options = options
@@ -47,33 +48,32 @@ class DrawingArrow {
   end (callback) {
     if (this.options.promptText != null) {
       this.options.promptText('', (input) => {
-        var bbox, center, hyp, offsetX, offsetY, offsetAngle, padding
         if (input !== '') {
           this.text_group = DrawingUtils.create_element(this.options.parent, 'g')
           this.text = DrawingUtils.create_element(this.text_group, 'text', {
-            'font-size': Math.round(DrawingUtils.size(this.options.parent) * 0.03),
+            'font-size': 20,
             'font-family': 'sans-serif'
           })
           DrawingUtils.style(this.text, 'stroke-width', '0')
           DrawingUtils.edit_text(this.text, input)
-          bbox = this.text.getBBox()
-          padding = DrawingUtils.size(this.options.parent) * 0.01
-          hyp = Math.sqrt(bbox.width * bbox.width + bbox.height * bbox.height) / 2
-          offsetAngle = this.angle() + Math.PI / 2
-          offsetX = (bbox.height / 2) / Math.tan(offsetAngle)
-          offsetY = (bbox.height / 2) / Math.tan(offsetAngle)
-          offsetX = hyp * Math.cos(offsetAngle)
-          offsetY = hyp * Math.sin(offsetAngle)
-          if (Math.abs(offsetX) > bbox.width / 2) {
-            offsetX = Math.abs(offsetX) / offsetX * bbox.width / 2
-            offsetX += Math.abs(offsetX) / offsetX * padding
-          }
-          if (Math.abs(offsetY) > bbox.height / 2) {
-            offsetY = Math.abs(offsetY) / offsetY * bbox.height / 2
-            offsetY += Math.abs(offsetY) / offsetY * padding
-          }
-          center = [this.from[0] - offsetX, this.from[1] - offsetY]
-          return DrawingUtils.apply_matrix(this.text_group, Geometry.translation_matrix(center))
+          var referentiel = new Referentiel(this.options.parent.parentElement)
+          var bbox = this.text.getBBox()
+          var padding = 20
+          var gfrom = referentiel.localToGlobal(this.from)
+          var offsetAngle = Geometry.angle(gfrom, [gfrom[0], gfrom[0] + 100000], referentiel.localToGlobal(this.to))
+          var offset = [
+            -(padding + bbox.width / 2) * Math.sin(offsetAngle),
+            (padding + bbox.height / 2) * Math.cos(offsetAngle)
+          ]
+
+          return DrawingUtils.apply_matrix(
+            this.text_group,
+            MatrixUtils.mult(
+              referentiel.matrixInv(),
+              Geometry.translation_matrix([-offset[0], -offset[1]]),
+              Geometry.translation_matrix(referentiel.localToGlobal(this.from))
+            )
+          )
         }
       })
     }
@@ -85,6 +85,6 @@ class DrawingArrow {
   }
 };
 
-DrawingArrow.type = 'arrow'
+Arrow.type = 'arrow'
 
-export { DrawingArrow }
+export { Arrow }

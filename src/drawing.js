@@ -2,11 +2,11 @@ import { Referentiel, MatrixUtils } from 'referentiel'
 import { Geometry } from './geometry'
 import { DrawingPathTool } from './drawing_path_tool.js'
 import { DrawingObjectTool } from './drawing_object_tool.js'
-import { DrawingTransform } from './drawing_transform.js'
+import { Transform } from './transform.js'
 import { DrawingSelect } from './drawing_select.js'
 import { DrawingUtils as Utils } from './drawing_utils.js'
-import { DrawingArrow } from './drawing_arrow.js'
-import { DrawingDoubleArrow } from './drawing_double_arrow.js'
+import { Arrow } from './arrow.js'
+import { DoubleArrow } from './double_arrow.js'
 import { DrawingLine } from './drawing_line.js'
 import { DrawingRect } from './drawing_rect.js'
 import { DrawingCircle } from './drawing_circle.js'
@@ -40,10 +40,10 @@ class Drawing {
     }
     switch (this.tool) {
       case 'arrow':
-        this._drawingObject(DrawingArrow, e)
+        this._drawingObject(Arrow, e)
         break
       case 'double-arrow':
-        this._drawingObject(DrawingDoubleArrow, e)
+        this._drawingObject(DoubleArrow, e)
         break
       case 'line':
         this._drawingObject(DrawingLine, e)
@@ -182,7 +182,7 @@ class Drawing {
   }
 
   transform (element) {
-    return new DrawingTransform(element, {
+    return new Transform(element, {
       handles: this.options.handles,
       start: () => {
         if (this.options.showControls) { this.options.showControls(false) }

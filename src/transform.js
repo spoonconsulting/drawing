@@ -4,7 +4,7 @@ import { Handle } from './handle.js'
 import { DrawingUtils as Utils } from './drawing_utils.js'
 import { Geometry } from './geometry.js'
 
-class DrawingTransform {
+class Transform {
   constructor (element1, options) {
     this.element = element1
     this.options = options
@@ -90,17 +90,12 @@ class DrawingTransform {
     var matrix = this.referentiel.matrixTransform()
     var x1 = MatrixUtils.multVector(matrix, [this.bbox.x, this.bbox.y, 1])
     var x2 = MatrixUtils.multVector(matrix, [this.bbox.x, this.bbox.y + this.bbox.height, 1])
-    var x3 = MatrixUtils.multVector(matrix, [this.bbox.x + this.bbox.width, this.bbox.y, 1])
-    var x4 = MatrixUtils.multVector(matrix, [this.bbox.x + this.bbox.width, this.bbox.y + this.bbox.height, 1])
-    var y1 = [Math.min(x1[0], x2[0], x3[0], x4[0]) - this.padding, Math.min(x1[1], x2[1], x3[1], x4[1]) - this.padding]
-    var y2 = [Math.max(x1[0], x2[0], x3[0], x4[0]) + this.padding, Math.max(x1[1], x2[1], x3[1], x4[1]) + this.padding]
+    var x3 = MatrixUtils.multVector(matrix, [this.bbox.x + this.bbox.width, this.bbox.y + this.bbox.height, 1])
+    var x4 = MatrixUtils.multVector(matrix, [this.bbox.x + this.bbox.width, this.bbox.y, 1])
 
-    var handle = Utils.create_element(this.svg, 'rect', {
-      x: y1[0],
-      y: y1[1],
-      width: y2[0] - y1[0],
-      height: y2[1] - y1[1],
-      style: 'fill:#CCCCCC; opacity: 0.3;'
+    var handle = Utils.create_element(this.svg, 'path', {
+      d: `M${x1[0]},${x1[1]} L${x2[0]},${x2[1]} L${x3[0]},${x3[1]} L${x4[0]},${x4[1]} L${x1[0]},${x1[1]}`,
+      style: `stroke: #CCCCCC; stroke-linecap: square; stroke-width: ${this.size};fill:#CCCCCC; opacity: 0.3;`
     })
 
     this.svg.insertBefore(handle, this.element)
@@ -119,31 +114,7 @@ class DrawingTransform {
 
     if (this.options.handles === false) { return }
 
-    var handleCenter = Geometry.barycentre([y1, y2])
-
-    handle = Utils.create_element(this.svg, 'g', {})
-    Utils.create_element(handle, 'circle', {
-      r: this.size / 2,
-      fill: 'white'
-    })
-    Utils.create_element(handle, 'circle', {
-      r: this.size / 4,
-      fill: '#0070d2'
-    })
-    Utils.apply_matrix(handle, [[1, 0, y2[0]], [0, 1, y2[1]], [0, 0, 1]])
-    var rotateScaleHandle = new Handle(handle, {
-      transformations: 'SR',
-      pivot: handleCenter,
-      start: (e) => {
-        this.start(e)
-        this.removeHandleExcept(rotateScaleHandle)
-      },
-      move: (matrix) => {
-        Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform()))
-      },
-      end: () => { this.end() }
-    })
-    this.handles.push(rotateScaleHandle)
+    var handleCenter = Geometry.barycentre([x1, x2, x3, x4])
 
     handle = Utils.create_element(this.svg, 'g', {})
     Utils.create_element(handle, 'circle', {
@@ -156,7 +127,7 @@ class DrawingTransform {
       fill: '#0070d2',
       transform: 'scale(' + this.size / 1024 + ') translate(-256 -256)'
     })
-    Utils.apply_matrix(handle, [[1, 0, y1[0]], [0, 1, y2[1]], [0, 0, 1]])
+    Utils.apply_matrix(handle, [[1, 0, x4[0]], [0, 1, x4[1]], [0, 0, 1]])
     var rotateHandle = new Handle(handle, {
       transformations: 'R',
       pivot: handleCenter,
@@ -181,7 +152,7 @@ class DrawingTransform {
       fill: '#0070d2',
       transform: 'rotate(-45) scale(' + this.size / 1024 + ') translate(-225 -256)'
     })
-    Utils.apply_matrix(handle, [[1, 0, y2[0]], [0, 1, y1[1]], [0, 0, 1]])
+    Utils.apply_matrix(handle, [[1, 0, x2[0]], [0, 1, x2[1]], [0, 0, 1]])
     var scaleHandle = new Handle(handle, {
       transformations: 'S',
       pivot: handleCenter,
@@ -194,6 +165,31 @@ class DrawingTransform {
       cancel: () => { this.cancel() }
     })
     this.handles.push(scaleHandle)
+
+    handle = Utils.create_element(this.svg, 'g', {})
+    Utils.create_element(handle, 'circle', {
+      r: this.size / 2,
+      fill: 'white'
+    })
+    Utils.create_element(handle, 'circle', {
+      r: this.size / 4,
+      fill: '#0070d2'
+    })
+    Utils.apply_matrix(handle, [[1, 0, x3[0]], [0, 1, x3[1]], [0, 0, 1]])
+    var rotateScaleHandle = new Handle(handle, {
+      transformations: 'SR',
+      pivot: handleCenter,
+      start: (e) => {
+        this.start(e)
+        this.removeHandleExcept(rotateScaleHandle)
+      },
+      move: (matrix) => {
+        Utils.apply_matrix(this.element, MatrixUtils.mult(matrix, new Referentiel(this.element).matrixTransform()))
+      },
+      end: () => { this.end() },
+      cancel: () => { this.end() }
+    })
+    this.handles.push(rotateScaleHandle)
   }
 
   makeACopy () {
@@ -208,4 +204,4 @@ class DrawingTransform {
   }
 }
 
-export { DrawingTransform }
+export { Transform }
