@@ -392,7 +392,7 @@ class Drawing {
     })
     image.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', dataUrl)
     referentiel = new Referentiel(this.svg)
-    scale = (Geometry.distance([window.innerWidth, 0], [0, 0]) / 4) / width
+    scale = (Geometry.distance([window.innerWidth, 0], [0, 0]) / 8) / width
     Utils.apply_matrix(
       group,
       MatrixUtils.mult(
