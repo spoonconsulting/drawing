@@ -308,7 +308,7 @@ class Drawing {
     var group = Utils.create_element(this.svg, 'g')
     var text = Utils.create_element(group, 'text', {
       'stroke-width': 0,
-      'font-size': Math.round(Geometry.distance([window.innerWidth, 0], [0, 0]) * 0.025),
+      'font-size': Math.round(Geometry.distance([window.innerWidth, window.innerHeight], [0, 0]) * 0.02),
       'font-family': 'sans-serif'
     })
     Utils.edit_text(text, input)
@@ -392,7 +392,7 @@ class Drawing {
     })
     image.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', dataUrl)
     referentiel = new Referentiel(this.svg)
-    scale = (Geometry.distance([window.innerWidth, 0], [0, 0]) / 8) / width
+    scale = (Geometry.distance([window.innerWidth, window.innerHeight], [0, 0]) / 16) / width
     Utils.apply_matrix(
       group,
       MatrixUtils.mult(
