@@ -2,7 +2,6 @@ import { DrawingUtils as Utils } from '../drawing_utils.js'
 
 class Hand {
   constructor (element, options) {
-    console.log('New Hand', element)
     this.element = element
     this.options = options
     this.destroyed = false

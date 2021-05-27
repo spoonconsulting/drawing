@@ -96,7 +96,6 @@ class Zoomable {
     this.start = null
     this.zooming = false
     this._upListener()
-    console.log('STOP !!')
   }
 
   move (e) {
