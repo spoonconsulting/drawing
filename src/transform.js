@@ -89,7 +89,6 @@ class Transform {
       style: `stroke-linecap: square; stroke-width: ${this.size};fill:#CCCCCC; opacity: 0;`
     })
 
-    this.svg.appendChild(handle)
     var positionHandle = new Handle(handle, {
       start: (e) => {
         this.start(e)
