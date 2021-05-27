@@ -65,8 +65,8 @@ class Drag {
       var transformationMatrix = Utils.nudgedMatrix(this.lastEstimate.getMatrix())
       var newMatrix = MatrixUtils.mult(transformationMatrix, this.matrix)
       this.matrix = newMatrix
-      if(this.lastEstimate.getScale() > 0.1 && this.lastEstimate.getScale() < 5) {
-        Utils.apply_matrix(this.element, this.matrix);
+      if (this.lastEstimate.getScale() > 0.1 && this.lastEstimate.getScale() < 5) {
+        Utils.apply_matrix(this.element, this.matrix)
         if (this.options.move) { this.options.move(transformationMatrix) }
       }
       this.start = touches
