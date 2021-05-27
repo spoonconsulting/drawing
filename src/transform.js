@@ -1,5 +1,4 @@
 import { Referentiel, MatrixUtils } from 'referentiel'
-import { Drag } from './drag.js'
 import { Handle } from './handle.js'
 import { DrawingUtils as Utils } from './drawing_utils.js'
 import { Geometry } from './geometry.js'
@@ -32,16 +31,13 @@ class Transform {
     this.size = Geometry.distance(this.containerReferentiel.globalToLocal([0, 0]), this.containerReferentiel.globalToLocal([20, 20]))
     this.padding = 5
     this.bbox = this.element.getBBox()
-    if (this.drag) {
-      this.drag.destroy()
-    }
-    this.initDrag()
     this.initHandles()
   }
 
   start (e) {
     if (e.altKey) { this.copy = this.makeACopy() }
     if (this.options.start) { this.options.start(e) }
+    if(this.background) { this.background.remove() }
   }
 
   cancel () {
@@ -60,18 +56,6 @@ class Transform {
       this.copy = null
     }
     if (this.options.end) { this.options.end() }
-  }
-
-  initDrag () {
-    this.drag = new Drag(this.element, {
-      start: (e) => {
-        this.start(e)
-        this.removeHandleExcept()
-      },
-      cancel: () => { this.cancel() },
-      end: () => { this.end() },
-      container: this.svg
-    })
   }
 
   removeHandleExcept (exceptHandle) {
@@ -93,12 +77,19 @@ class Transform {
     var x3 = MatrixUtils.multVector(matrix, [this.bbox.x + this.bbox.width, this.bbox.y + this.bbox.height, 1])
     var x4 = MatrixUtils.multVector(matrix, [this.bbox.x + this.bbox.width, this.bbox.y, 1])
 
-    var handle = Utils.create_element(this.svg, 'path', {
+    if(this.background) { this.background.remove(); }
+    this.background = Utils.create_element(this.svg, 'path', {
       d: `M${x1[0]},${x1[1]} L${x2[0]},${x2[1]} L${x3[0]},${x3[1]} L${x4[0]},${x4[1]} L${x1[0]},${x1[1]}`,
       style: `stroke: #CCCCCC; stroke-linecap: square; stroke-width: ${this.size};fill:#CCCCCC; opacity: 0.3;`
     })
+    this.svg.insertBefore(this.background, this.element)
 
-    this.svg.insertBefore(handle, this.element)
+    var handle = Utils.create_element(this.svg, 'path', {
+      d: `M${x1[0]},${x1[1]} L${x2[0]},${x2[1]} L${x3[0]},${x3[1]} L${x4[0]},${x4[1]} L${x1[0]},${x1[1]}`,
+      style: `stroke-linecap: square; stroke-width: ${this.size};fill:#CCCCCC; opacity: 0;`
+    })
+
+    this.svg.appendChild(handle)
     var positionHandle = new Handle(handle, {
       start: (e) => {
         this.start(e)
@@ -200,7 +191,7 @@ class Transform {
 
   destroy () {
     this.removeHandleExcept()
-    this.drag.destroy()
+    if(this.background) { this.background.remove(); }
   }
 }
 
