@@ -3,7 +3,10 @@ import { Geometry } from './geometry.js'
 
 var DrawingUtils = {
   apply_matrix: function (element, m) {
-    return DrawingUtils.style(element, 'transform', `matrix(${[m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]].join(', ')})`)
+    var scale = Math.sqrt(m[0][0] * m[0][0] + m[1][1] * m[1][1]) + Math.sqrt(m[0][1] * m[0][1] + m[1][0] * m[1][0])
+    if(scale > 0.000001) {
+      element.style.transform = `matrix(${[m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]].join(', ')})`
+    }
   },
   nudgedMatrix: function (m) {
     return [
