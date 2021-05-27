@@ -37,7 +37,7 @@ class Transform {
   start (e) {
     if (e.altKey) { this.copy = this.makeACopy() }
     if (this.options.start) { this.options.start(e) }
-    if(this.background) { this.background.remove() }
+    if (this.background) { this.background.remove() }
   }
 
   cancel () {
@@ -77,7 +77,7 @@ class Transform {
     var x3 = MatrixUtils.multVector(matrix, [this.bbox.x + this.bbox.width, this.bbox.y + this.bbox.height, 1])
     var x4 = MatrixUtils.multVector(matrix, [this.bbox.x + this.bbox.width, this.bbox.y, 1])
 
-    if(this.background) { this.background.remove(); }
+    if (this.background) { this.background.remove() }
     this.background = Utils.create_element(this.svg, 'path', {
       d: `M${x1[0]},${x1[1]} L${x2[0]},${x2[1]} L${x3[0]},${x3[1]} L${x4[0]},${x4[1]} L${x1[0]},${x1[1]}`,
       style: `stroke: #CCCCCC; stroke-linecap: square; stroke-width: ${this.size};fill:#CCCCCC; opacity: 0.3;`
@@ -190,7 +190,7 @@ class Transform {
 
   destroy () {
     this.removeHandleExcept()
-    if(this.background) { this.background.remove(); }
+    if (this.background) { this.background.remove() }
   }
 }
 
