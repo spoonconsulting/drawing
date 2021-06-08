@@ -5,7 +5,7 @@ var DrawingUtils = {
   apply_matrix: function (element, m) {
     var scale = Math.sqrt(m[0][0] * m[0][0] + m[1][1] * m[1][1]) + Math.sqrt(m[0][1] * m[0][1] + m[1][0] * m[1][0])
     if (scale > 0.000001) {
-      element.style.transform = `matrix(${[m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]].join(', ')})`
+      DrawingUtils.style(element, 'transform', `matrix(${[m[0][0], m[1][0], m[0][1], m[1][1], m[0][2], m[1][2]].join(', ')})`)
     }
   },
   nudgedMatrix: function (m) {
@@ -18,7 +18,7 @@ var DrawingUtils = {
   style: function (element, key, value) {
     if (['height', 'width', 'x', 'y', 'transform'].indexOf(key) > -1) {
       element.setAttribute(key, value)
-      // element.style[key] = value
+      element.style[key] = ''
     } else {
       element.style[key] = value
     }
